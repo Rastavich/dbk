@@ -1,6 +1,6 @@
 import React from 'react';
 
-import {View, StyleSheet, Text, Button, TextInput} from 'react-native';
+import {View, StyleSheet, Text, FlatList} from 'react-native';
 import {useQuery} from '@apollo/client';
 
 import {GET_USER_BY_ID} from '../graphql/requests';
@@ -12,9 +12,10 @@ export function LoginScreen() {
 
   return (
     <View style={styles.container}>
-      <Text>Login Screen</Text>
-      <TextInput title={'Username'} />
-      <Button title={'Login'} style={styles.button} onPress={() => {}} />
+      <FlatList
+        data={data.digitalAssets}
+        renderItem={({item}) => <Text>{item.url}</Text>}
+      />
     </View>
   );
 }

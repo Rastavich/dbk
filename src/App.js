@@ -5,11 +5,12 @@ import {NavigationContainer} from '@react-navigation/native';
 import {ApolloProvider, ApolloClient, InMemoryCache} from '@apollo/client';
 
 import {createStackNavigator} from '@react-navigation/stack';
+import {BASE_URI_LOCAL} from './config';
 
 const Stack = createStackNavigator();
 
 const client = new ApolloClient({
-  uri: 'http://localhost:1337/graphql',
+  uri: BASE_URI_LOCAL,
   cache: new InMemoryCache(),
 });
 
