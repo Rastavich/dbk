@@ -11,6 +11,7 @@ import {
   Dimensions,
   ActivityIndicator,
   KeyboardAvoidingView,
+  Alert,
 } from 'react-native';
 
 import {BASE_LOGIN_URI} from '../config';
@@ -91,7 +92,8 @@ export function LoginScreen({navigation}) {
     setIsLoading(true);
     let foundUser = {
       userToken: '',
-      userName: '',
+      userName: userName,
+      password: password,
       id: '',
       type: '',
       userEmail: '',
@@ -126,13 +128,16 @@ export function LoginScreen({navigation}) {
           userName: response.data.user.username,
           userEmail: response.data.user.email,
         };
+        setIsLoading(false);
+        signIn(foundUser);
       })
       .catch((err) => {
         console.log(err);
+        Alert.alert('Invalid User!', 'Username or password is incorrect.', [
+          {text: 'Okay'},
+        ]);
+        return;
       });
-
-    setIsLoading(false);
-    signIn(foundUser);
   }
 
   if (isLoading) {

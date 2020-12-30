@@ -1,0 +1,47 @@
+{
+  "version": "2.0.0",
+  "presentation": {
+    "reveal": "always",
+    "panel": "new"
+  },
+  "tasks": [
+    {
+      "taskName": "Build APK Debug",
+      "group": "build",
+      "type": "shell",
+      "windows": {
+        "command": "cd android && ./gradlew assembleDebug"
+      },
+      "linux": {
+        "command": "cd android && ./gradlew assembleDebug"
+      },
+      "label": "Build APK Debug",
+      "problemMatcher": [
+        "$eslint-compact"
+      ]
+    },
+    {
+      "taskName": "Build APK Release",
+      "group": "build",
+      "type": "shell",
+      "windows": {
+        "command": "cd android && ./gradlew assembleRelease"
+      },
+      "linux": {
+        "command": "cd android && ./gradlew assembleRelease"
+      }
+    },
+    {
+      "taskName": "Generate Android Bundle",
+      "group": "build",
+      "type": "shell",
+      "command": "react-native bundle --platform android --dev false --entry-file index.js --bundle-output android/main.jsbundle"
+    },
+    {
+      "taskName": "Generate iOS Bundle",
+      "group": "build",
+      "type": "shell",
+      "command": "react-native bundle --platform ios --dev false --entry-file index.js --bundle-output ios/main.jsbundle"
+    }
+  ]
+}
