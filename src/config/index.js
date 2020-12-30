@@ -1,5 +1,6 @@
 // Live config
 export const BASE_URI = 'https://dbk-strapi.herokuapp.com';
+export const BASE_LOGIN_URI = 'https://dbk-strapi.herokuapp.com/auth/local';
 export const GRAPHQL_URI = `${BASE_URI}/graphql`;
 
 // TODO: Clean up this local config for running locally on multiple different machines using different local IP addresses.
