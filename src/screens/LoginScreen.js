@@ -1,13 +1,26 @@
 import React from 'react';
 import axios from 'axios';
 
-import {View, StyleSheet, Text, Button, TextInput} from 'react-native';
+import {
+  View,
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  ImageBackground,
+  Dimensions,
+  ActivityIndicator,
+  KeyboardAvoidingView,
+} from 'react-native';
 
 import {BASE_LOGIN_URI} from '../config';
-
 import {AuthContext} from '../components/context';
 
+const background = require('../assets/images/login_bg.jpg');
+const {width, height} = Dimensions.get('window');
+
 export function LoginScreen({navigation}) {
+  const [isLoading, setIsLoading] = React.useState(false);
   const [data, setData] = React.useState({
     username: '',
     password: '',
@@ -17,8 +30,7 @@ export function LoginScreen({navigation}) {
     isValidPassword: true,
   });
 
-  const {signIn} = React.useContext(AuthContext);
-  const {signOut} = React.useContext(AuthContext);
+  const {signIn, signOut} = React.useContext(AuthContext);
 
   const textInputChange = (val) => {
     if (val.trim().length >= 4) {
@@ -76,6 +88,7 @@ export function LoginScreen({navigation}) {
   };
 
   async function loginHandle(userName, password) {
+    setIsLoading(true);
     let foundUser = {
       userToken: '',
       userName: '',
@@ -83,6 +96,22 @@ export function LoginScreen({navigation}) {
       type: '',
       userEmail: '',
     };
+
+    if (data.username.length == 0 || data.password.length == 0) {
+      Alert.alert(
+        'Wrong Input!',
+        'Username or password field cannot be empty.',
+        [{text: 'Okay'}],
+      );
+      return;
+    }
+
+    if (foundUser.length == 0) {
+      Alert.alert('Invalid User!', 'Username or password is incorrect.', [
+        {text: 'Okay'},
+      ]);
+      return;
+    }
 
     await axios
       .post(BASE_LOGIN_URI, {
@@ -102,59 +131,65 @@ export function LoginScreen({navigation}) {
         console.log(err);
       });
 
-    if (data.username.length == 0 || data.password.length == 0) {
-      Alert.alert(
-        'Wrong Input!',
-        'Username or password field cannot be empty.',
-        [{text: 'Okay'}],
-      );
-      return;
-    }
-
-    if (foundUser.length == 0) {
-      Alert.alert('Invalid User!', 'Username or password is incorrect.', [
-        {text: 'Okay'},
-      ]);
-      return;
-    }
+    setIsLoading(false);
     signIn(foundUser);
   }
 
+  if (isLoading) {
+    return (
+      <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+        <ActivityIndicator style={styles.loadingIndicator} size="large" />
+      </View>
+    );
+  }
   return (
     <View style={styles.container}>
-      <Text>Username</Text>
-      <TextInput
-        placeholder="Your Username"
-        placeholderTextColor="#666666"
-        autoCapitalize="none"
-        onChangeText={(val) => textInputChange(val)}
-        onEndEditing={(e) => handleValidUser(e.nativeEvent.text)}
-      />
-      {data.check_textInputChange ? <View></View> : null}
-      <Text>Password</Text>
-      <View>
-        <TextInput
-          placeholder="Your Password"
-          placeholderTextColor="#666666"
-          secureTextEntry={data.secureTextEntry ? true : false}
-          autoCapitalize="none"
-          onChangeText={(val) => handlePasswordChange(val)}
-        />
-      </View>
+      <ImageBackground
+        source={background}
+        style={styles.background}
+        resizeMode="cover">
+        <View style={styles.halfHeight}></View>
+        <View style={styles.quarterHeight}>
+          <KeyboardAvoidingView
+            behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+            style={styles.container}>
+            <View style={styles.inputBackground}>
+              <TextInput
+                style={styles.textInput}
+                placeholder="Your Username"
+                placeholderTextColor="#666666"
+                autoCapitalize="none"
+                onChangeText={(val) => textInputChange(val)}
+                onEndEditing={(e) => handleValidUser(e.nativeEvent.text)}
+              />
 
-      <Button
-        onPress={() => {
-          loginHandle(data.username, data.password);
-        }}
-        title="Sign In"
-      />
+              <TextInput
+                style={styles.textInput}
+                placeholder="Your Password"
+                placeholderTextColor="#666666"
+                secureTextEntry={data.secureTextEntry ? true : false}
+                autoCapitalize="none"
+                onChangeText={(val) => handlePasswordChange(val)}
+              />
 
-      <Button
-        onPress={() => {
-          signOut();
-        }}
-        title="Sign Out"
-      />
+              <TouchableOpacity
+                style={styles.button}
+                onPress={() => {
+                  loginHandle(data.username, data.password);
+                }}>
+                <Text styles={styles.text}>Sign In</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={styles.button}
+                onPress={() => {
+                  signOut();
+                }}>
+                <Text styles={styles.buttonText}>Sign Out</Text>
+              </TouchableOpacity>
+            </View>
+          </KeyboardAvoidingView>
+        </View>
+      </ImageBackground>
     </View>
   );
 }
@@ -162,10 +197,50 @@ export function LoginScreen({navigation}) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    flexDirection: 'column',
+  },
+  halfHeight: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  quarterHeight: {
+    flex: 3,
     alignItems: 'center',
     justifyContent: 'center',
   },
   button: {
-    color: 'blue',
+    backgroundColor: 'lightblue',
+    margin: 5,
+    width: 200,
+    padding: 10,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  textInput: {
+    height: 40,
+    width: 250,
+    borderColor: 'lightblue',
+    borderWidth: 1,
+    margin: 10,
+  },
+  buttonText: {},
+  background: {
+    width,
+    height,
+  },
+  inputBackground: {
+    backgroundColor: '#fff',
+    borderColor: 'lightblue',
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderWidth: 1,
+    borderRadius: 15,
+    padding: 15,
+  },
+  loadingIndicator: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
 });

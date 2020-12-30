@@ -2,6 +2,7 @@ import React, {useEffect, useState, useMemo} from 'react';
 import {InitialScreen} from './screens/InitialScreen';
 import {LoginScreen} from './screens/LoginScreen';
 import {MainScreen} from './screens/MainScreen';
+import {RegisterScreen} from './screens/RegisterScreen';
 import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
 import {ApolloProvider, ApolloClient, InMemoryCache} from '@apollo/client';
@@ -9,7 +10,7 @@ import {ActivityIndicator, Button, View} from 'react-native';
 import AsyncStorage from '@react-native-community/async-storage';
 
 import {BASE_URI} from './config';
-import {AuthContext} from './components/context';
+import {AuthContext, UserContext} from './components/context';
 
 const Stack = createStackNavigator();
 
@@ -19,6 +20,16 @@ const client = new ApolloClient({
 });
 
 export default function () {
+  const [user, setUser] = useState('');
+
+  const providerValue = useMemo(
+    () => ({
+      user,
+      setUser,
+    }),
+    [user, setUser],
+  );
+
   const initialLoginState = {
     isLoading: true,
     userName: null,
@@ -83,6 +94,8 @@ export default function () {
           await AsyncStorage.setItem('userId', JSON.stringify(userId));
         } catch (e) {
           console.log(e);
+        } finally {
+          setUser({userName, userEmail, userId});
         }
         // console.log('user token: ', userToken);
         dispatch({
@@ -94,8 +107,6 @@ export default function () {
         });
       },
       signOut: async () => {
-        // setUserToken(null);
-        // setIsLoading(false);
         try {
           await AsyncStorage.removeItem('userToken');
           await AsyncStorage.removeItem('userId');
@@ -106,7 +117,7 @@ export default function () {
         }
         dispatch({type: 'LOGOUT'});
       },
-      signUp: () => {
+      signUp: async (foundUser) => {
         // setUserToken('fgkj');
         // setIsLoading(false);
       },
@@ -116,7 +127,6 @@ export default function () {
 
   useEffect(() => {
     setTimeout(async () => {
-      // setIsLoading(false);
       let userToken;
       userToken = null;
       try {
@@ -124,7 +134,6 @@ export default function () {
       } catch (e) {
         console.log(e);
       }
-      // console.log('user token: ', userToken);
       dispatch({type: 'RETRIEVE_TOKEN', token: userToken});
     }, 1000);
   }, []);
@@ -138,24 +147,33 @@ export default function () {
   }
   return (
     <AuthContext.Provider value={authContext}>
-      <ApolloProvider client={client}>
-        <NavigationContainer>
-          {loginState.userToken !== null ? (
-            <Stack.Navigator>
-              <Stack.Screen name={'MainScreen'} component={MainScreen} />
-            </Stack.Navigator>
-          ) : (
-            <Stack.Navigator
-              screenOptions={{
-                headerBackTitleVisible: false,
-                headerTintColor: 'black',
-              }}>
-              <Stack.Screen name={'InitialScreen'} component={InitialScreen} />
-              <Stack.Screen name={'LoginScreen'} component={LoginScreen} />
-            </Stack.Navigator>
-          )}
-        </NavigationContainer>
-      </ApolloProvider>
+      <UserContext.Provider value={providerValue}>
+        <ApolloProvider client={client}>
+          <NavigationContainer>
+            {loginState.userToken !== null ? (
+              <Stack.Navigator>
+                <Stack.Screen name={'MainScreen'} component={MainScreen} />
+              </Stack.Navigator>
+            ) : (
+              <Stack.Navigator
+                screenOptions={{
+                  headerBackTitleVisible: false,
+                  headerTintColor: 'black',
+                }}>
+                <Stack.Screen
+                  name={'InitialScreen'}
+                  component={InitialScreen}
+                />
+                <Stack.Screen name={'LoginScreen'} component={LoginScreen} />
+                <Stack.Screen
+                  name={'RegisterScreen'}
+                  component={RegisterScreen}
+                />
+              </Stack.Navigator>
+            )}
+          </NavigationContainer>
+        </ApolloProvider>
+      </UserContext.Provider>
     </AuthContext.Provider>
   );
 }

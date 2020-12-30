@@ -19,3 +19,17 @@ export const GET_ASSET_BY_USER = gql`
     }
   }
 `;
+
+export const REGISTER_USER = gql`
+  mutation {
+    register(
+      input: {
+        userName: $userName
+        userEmail: $userEmail
+        userPassword: $userPassword
+      }
+    ) {
+      jwt
+    }
+  }
+`;
