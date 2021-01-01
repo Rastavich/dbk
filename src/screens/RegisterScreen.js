@@ -2,13 +2,11 @@ import React from 'react';
 import {View, StyleSheet, Text, Button, TextInput, Alert} from 'react-native';
 
 import {AuthContext} from '../components/context';
-import {useMutation} from '@apollo/client';
 import {REGISTER_USER} from '../graphql/requests';
 import {GRAPHQL_URI} from '../config/index';
 import axios from 'axios';
 
 export function RegisterScreen() {
-  console.log(GRAPHQL_URI);
   const {signUp} = React.useContext(AuthContext);
   const [data, setData] = React.useState({
     username: '',
@@ -22,11 +20,7 @@ export function RegisterScreen() {
 
   function register() {
     var loginData = JSON.stringify({
-      query: `mutation registerUser($username: String!, $email: String!, $password: String!) {
-        register(input: {username: $username, email: $email, password: $password}) {
-            jwt
-        }
-    }`,
+      query: REGISTER_USER,
       variables: {
         username: data.username,
         email: data.userEmail,
@@ -46,21 +40,38 @@ export function RegisterScreen() {
     axios(config)
       .then(function (response) {
         console.log(JSON.stringify(response.data));
-        if (response.data.data.register.jwt) {
-          let foundUser = {
-            userToken: response.data.data.register.jwt,
-            userName: username,
-            password: password,
-            userEmail: userEmail,
-          };
-          signUp(foundUser);
+
+        if (response.data.errors) {
+          response.data.errors.map(function (err) {
+            if (err.extensions.exception.code == 400) {
+              err.extensions.exception.data.message.map(function (errMsg) {
+                if (errMsg) {
+                  errMsg.messages.map(function (messages) {
+                    console.log(messages);
+                    Alert.alert('Error:', messages.message, [{text: 'Okay'}]);
+                    return;
+                  });
+                }
+              });
+            }
+          });
         }
+
+        let foundUser = {
+          userToken: response.data.data.register.jwt,
+          userName: response.data.data.register.user.username,
+          userEmail: response.data.data.register.user.email,
+        };
+        signUp(foundUser);
       })
       .catch(function (error) {
         console.log(error);
-      });
 
-    console.log(config);
+        // console.log(res);
+
+        // console.log(res.errors.extensions.exception.code);
+        // console.log(error);
+      });
   }
 
   const userInputChange = (val) => {

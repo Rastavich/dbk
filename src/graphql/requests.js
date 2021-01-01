@@ -20,18 +20,18 @@ export const GET_ASSET_BY_USER = gql`
   }
 `;
 
-export const REGISTER_USER = gql`
+export const REGISTER_USER = `
   mutation registerUser(
-    $userName: String!
-    $userEmail: String!
-    $userPassword: String!
+    $username: String!
+    $email: String!
+    $password: String!
   ) {
-    register(
-      userName: $userName
-      userEmail: $userEmail
-      password: $userPassword
-    ) {
+    register(input: {username: $username, email: $email, password: $password}) {
       jwt
+      user {
+        username
+        email
+      }
     }
   }
 `;
