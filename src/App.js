@@ -9,18 +9,17 @@ import {ApolloProvider, ApolloClient, InMemoryCache} from '@apollo/client';
 import {ActivityIndicator, Button, View} from 'react-native';
 import AsyncStorage from '@react-native-community/async-storage';
 
-import {BASE_URI} from './config';
+import {link} from './graphql/link';
 import {AuthContext, UserContext} from './components/context';
 
 const Stack = createStackNavigator();
 
-const client = new ApolloClient({
-  uri: BASE_URI,
-  cache: new InMemoryCache(),
-});
-
 export default function () {
   const [user, setUser] = useState('');
+  const client = new ApolloClient({
+    link: link,
+    cache: new InMemoryCache(),
+  });
 
   const providerValue = useMemo(
     () => ({
@@ -118,8 +117,27 @@ export default function () {
         dispatch({type: 'LOGOUT'});
       },
       signUp: async (foundUser) => {
-        // setUserToken('fgkj');
-        // setIsLoading(false);
+        const userToken = foundUser.userToken;
+        const userId = foundUser.userId;
+        const userName = foundUser.userName;
+        const userEmail = foundUser.userEmail;
+        try {
+          await AsyncStorage.setItem('userToken', userToken);
+          await AsyncStorage.setItem('userName', userName);
+          await AsyncStorage.setItem('userEmail', userEmail);
+          await AsyncStorage.setItem('userId', JSON.stringify(userId));
+        } catch (e) {
+          console.log(e);
+        } finally {
+          setUser({userName, userEmail, userId});
+        }
+        dispatch({
+          type: 'REGISTER',
+          id: userId,
+          token: userToken,
+          userName: userName,
+          userEmail: userEmail,
+        });
       },
     }),
     [],

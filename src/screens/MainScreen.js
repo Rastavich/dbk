@@ -4,27 +4,21 @@ import {AuthContext, UserContext} from '../components/context';
 import {useQuery} from '@apollo/client';
 
 import {GET_ASSET_BY_USER} from '../graphql/requests';
+import {Card} from '../components/card';
 
 export function MainScreen() {
   const {signOut} = React.useContext(AuthContext);
 
   const {user, setUser} = useContext(UserContext);
 
-  const {loading: assetLoading, error, data: assetData} = useQuery(
-    GET_ASSET_BY_USER,
-    {
-      variables: {
-        // userId,
-      },
-      fetchPolicy: 'cache-first',
-    },
-  );
-
   return (
     <View style={styles.container}>
       <Text>HELLO {user.userName}</Text>
       <Text>Your email is {user.userEmail}</Text>
       {/* <FlatList data={}></FlatList> */}
+      <Card>
+        <Text>{user.userEmail}</Text>
+      </Card>
       <Button
         title={'Logout'}
         style={styles.button}

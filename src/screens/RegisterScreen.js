@@ -1,22 +1,43 @@
-import React, {useState} from 'react';
-import axios from 'axios';
-import {AuthContext} from '../components/context';
-import {GRAPHQL_URL} from '../config/index';
-import {useQuery} from '@apollo/client';
-
+import React from 'react';
 import {View, StyleSheet, Text, Button, TextInput} from 'react-native';
 
-export function RegisterScreen({navigation}) {
+import {AuthContext} from '../components/context';
+import {useMutation} from '@apollo/client';
+import {REGISTER_USER} from '../graphql/requests';
+
+export function RegisterScreen() {
+  const {signUp} = React.useContext(AuthContext);
   const [data, setData] = React.useState({
     username: '',
     password: '',
+    userEmail: '',
     check_textInputChange: false,
     secureTextEntry: true,
     isValidUser: true,
     isValidPassword: true,
   });
 
-  const {signUp} = React.useContext(AuthContext);
+  let userName = data.username;
+  let pass = data.password;
+  let email = data.userEmail;
+
+  console.log(userName, pass, email);
+  const [register, {error}] = useMutation(REGISTER_USER, {
+    variables: {userName, email, pass},
+  });
+  if (error) {
+    console.log(error);
+  }
+  if (register) {
+    console.log(register);
+    // let foundUser = {
+    //   userToken: register.data.jwt,
+    //   userName: userName,
+    //   password: password,
+    //   userEmail: userEmail,
+    // };
+    // signUp(foundUser);
+  }
 
   const userInputChange = (val) => {
     if (val.trim().length >= 4) {
@@ -70,13 +91,6 @@ export function RegisterScreen({navigation}) {
     }
   };
 
-  const updateSecureTextEntry = () => {
-    setData({
-      ...data,
-      secureTextEntry: !data.secureTextEntry,
-    });
-  };
-
   const handleValidUser = (val) => {
     if (val.trim().length >= 4) {
       setData({
@@ -91,61 +105,6 @@ export function RegisterScreen({navigation}) {
     }
   };
 
-  async function registerHandle(userName, userEmail, password) {
-    let foundUser = {
-      userToken: '',
-      userName: '',
-      id: '',
-      type: '',
-      userEmail: '',
-    };
-
-    const {loading: assetLoading, error, data: assetData} = useQuery(
-      GET_ASSET_BY_USER,
-      {
-        variables: {
-          // userId,
-        },
-        fetchPolicy: 'cache-first',
-      },
-    );
-
-    await axios
-      .post(GRAPHQL_URL, {
-        identifier: userName,
-        password: password,
-      })
-      .then((response) => {
-        console.log(response.data);
-        foundUser = {
-          userToken: response.data.jwt,
-          userId: response.data.user.id,
-          userName: response.data.user.username,
-          userEmail: response.data.user.email,
-        };
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-
-    if (data.username.length == 0 || data.password.length == 0) {
-      Alert.alert(
-        'Wrong Input!',
-        'Username or password field cannot be empty.',
-        [{text: 'Okay'}],
-      );
-      return;
-    }
-
-    if (foundUser.length == 0) {
-      Alert.alert('Invalid User!', 'Username or password is incorrect.', [
-        {text: 'Okay'},
-      ]);
-      return;
-    }
-    signUp(foundUser);
-  }
-
   return (
     <View style={styles.container}>
       <Text>Username</Text>
@@ -153,7 +112,7 @@ export function RegisterScreen({navigation}) {
         placeholder="Your Username"
         placeholderTextColor="#666666"
         autoCapitalize="none"
-        onChangeText={(val) => textInputChange(val)}
+        onChangeText={(val) => userInputChange(val)}
         onEndEditing={(e) => handleValidUser(e.nativeEvent.text)}
       />
       <Text>Email</Text>
@@ -161,7 +120,7 @@ export function RegisterScreen({navigation}) {
         placeholder="Your Email"
         placeholderTextColor="#666666"
         autoCapitalize="none"
-        onChangeText={(val) => textInputChange(val)}
+        onChangeText={(val) => userEmailInputChange(val)}
         onEndEditing={(e) => handleValidUser(e.nativeEvent.text)}
       />
       {data.check_textInputChange ? <View></View> : null}
@@ -176,12 +135,7 @@ export function RegisterScreen({navigation}) {
         />
       </View>
 
-      <Button
-        onPress={() => {
-          registerHandle(data.username, data.password, data.userEmail);
-        }}
-        title="Sign Up!"
-      />
+      <Button onPress={register} title="Sign Up!" />
     </View>
   );
 }

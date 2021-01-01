@@ -9,18 +9,20 @@ import {
   TouchableOpacity,
   ImageBackground,
   Dimensions,
-  ActivityIndicator,
   KeyboardAvoidingView,
   Alert,
 } from 'react-native';
 
 import {BASE_LOGIN_URI} from '../config';
-import {AuthContext} from '../components/context';
+import {AuthContext, UserContext} from '../components/context';
+import {Loader} from '../components/loader';
 
 const background = require('../assets/images/login_bg.jpg');
 const {width, height} = Dimensions.get('window');
 
 export function LoginScreen({navigation}) {
+  const {user, setUser} = React.useContext(UserContext);
+  const {signIn, signOut} = React.useContext(AuthContext);
   const [isLoading, setIsLoading] = React.useState(false);
   const [data, setData] = React.useState({
     username: '',
@@ -30,8 +32,6 @@ export function LoginScreen({navigation}) {
     isValidUser: true,
     isValidPassword: true,
   });
-
-  const {signIn, signOut} = React.useContext(AuthContext);
 
   const textInputChange = (val) => {
     if (val.trim().length >= 4) {
@@ -129,6 +129,7 @@ export function LoginScreen({navigation}) {
           userEmail: response.data.user.email,
         };
         setIsLoading(false);
+        setUser(response.data);
         signIn(foundUser);
       })
       .catch((err) => {
@@ -140,13 +141,6 @@ export function LoginScreen({navigation}) {
       });
   }
 
-  if (isLoading) {
-    return (
-      <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-        <ActivityIndicator style={styles.loadingIndicator} size="large" />
-      </View>
-    );
-  }
   return (
     <View style={styles.container}>
       <ImageBackground
@@ -155,44 +149,51 @@ export function LoginScreen({navigation}) {
         resizeMode="cover">
         <View style={styles.halfHeight}></View>
         <View style={styles.quarterHeight}>
-          <KeyboardAvoidingView
-            behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-            style={styles.container}>
-            <View style={styles.inputBackground}>
-              <TextInput
-                style={styles.textInput}
-                placeholder="Your Username"
-                placeholderTextColor="#666666"
-                autoCapitalize="none"
-                onChangeText={(val) => textInputChange(val)}
-                onEndEditing={(e) => handleValidUser(e.nativeEvent.text)}
-              />
+          {isLoading ? (
+            <Loader
+              text="Logging you in now"
+              background={styles.inputBackground}
+            />
+          ) : (
+            <KeyboardAvoidingView
+              behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+              style={styles.container}>
+              <View style={styles.inputBackground}>
+                <TextInput
+                  style={styles.textInput}
+                  placeholder="Your Username"
+                  placeholderTextColor="#666666"
+                  autoCapitalize="none"
+                  onChangeText={(val) => textInputChange(val)}
+                  onEndEditing={(e) => handleValidUser(e.nativeEvent.text)}
+                />
 
-              <TextInput
-                style={styles.textInput}
-                placeholder="Your Password"
-                placeholderTextColor="#666666"
-                secureTextEntry={data.secureTextEntry ? true : false}
-                autoCapitalize="none"
-                onChangeText={(val) => handlePasswordChange(val)}
-              />
+                <TextInput
+                  style={styles.textInput}
+                  placeholder="Your Password"
+                  placeholderTextColor="#666666"
+                  secureTextEntry={data.secureTextEntry ? true : false}
+                  autoCapitalize="none"
+                  onChangeText={(val) => handlePasswordChange(val)}
+                />
 
-              <TouchableOpacity
-                style={styles.button}
-                onPress={() => {
-                  loginHandle(data.username, data.password);
-                }}>
-                <Text styles={styles.text}>Sign In</Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={styles.button}
-                onPress={() => {
-                  signOut();
-                }}>
-                <Text styles={styles.buttonText}>Sign Out</Text>
-              </TouchableOpacity>
-            </View>
-          </KeyboardAvoidingView>
+                <TouchableOpacity
+                  style={styles.button}
+                  onPress={() => {
+                    loginHandle(data.username, data.password);
+                  }}>
+                  <Text styles={styles.text}>Sign In</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  style={styles.button}
+                  onPress={() => {
+                    signOut();
+                  }}>
+                  <Text styles={styles.buttonText}>Sign Out</Text>
+                </TouchableOpacity>
+              </View>
+            </KeyboardAvoidingView>
+          )}
         </View>
       </ImageBackground>
     </View>
@@ -227,6 +228,11 @@ const styles = StyleSheet.create({
     width: 250,
     borderColor: 'lightblue',
     borderWidth: 1,
+    margin: 10,
+  },
+  loader: {
+    height: 40,
+    width: 250,
     margin: 10,
   },
   buttonText: {},
