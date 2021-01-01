@@ -16,10 +16,7 @@ const Stack = createStackNavigator();
 
 export default function () {
   const [user, setUser] = useState('');
-  const client = new ApolloClient({
-    link: link,
-    cache: new InMemoryCache(),
-  });
+  const [client, setClient] = React.useState(null);
 
   const providerValue = useMemo(
     () => ({
@@ -144,6 +141,12 @@ export default function () {
   );
 
   useEffect(() => {
+    setClient(
+      new ApolloClient({
+        link: link,
+        cache: new InMemoryCache(),
+      }),
+    );
     setTimeout(async () => {
       let userToken;
       userToken = null;
@@ -156,6 +159,13 @@ export default function () {
     }, 1000);
   }, []);
 
+  if (loginState.isLoading) {
+    return (
+      <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+        <ActivityIndicator size="large" />
+      </View>
+    );
+  }
   if (loginState.isLoading) {
     return (
       <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>

@@ -1,11 +1,14 @@
 import React from 'react';
-import {View, StyleSheet, Text, Button, TextInput} from 'react-native';
+import {View, StyleSheet, Text, Button, TextInput, Alert} from 'react-native';
 
 import {AuthContext} from '../components/context';
 import {useMutation} from '@apollo/client';
 import {REGISTER_USER} from '../graphql/requests';
+import {GRAPHQL_URI} from '../config/index';
+import axios from 'axios';
 
 export function RegisterScreen() {
+  console.log(GRAPHQL_URI);
   const {signUp} = React.useContext(AuthContext);
   const [data, setData] = React.useState({
     username: '',
@@ -17,26 +20,47 @@ export function RegisterScreen() {
     isValidPassword: true,
   });
 
-  let userName = data.username;
-  let pass = data.password;
-  let email = data.userEmail;
+  function register() {
+    var loginData = JSON.stringify({
+      query: `mutation registerUser($username: String!, $email: String!, $password: String!) {
+        register(input: {username: $username, email: $email, password: $password}) {
+            jwt
+        }
+    }`,
+      variables: {
+        username: data.username,
+        email: data.userEmail,
+        password: data.password,
+      },
+    });
 
-  console.log(userName, pass, email);
-  const [register, {error}] = useMutation(REGISTER_USER, {
-    variables: {userName, email, pass},
-  });
-  if (error) {
-    console.log(error);
-  }
-  if (register) {
-    console.log(register);
-    // let foundUser = {
-    //   userToken: register.data.jwt,
-    //   userName: userName,
-    //   password: password,
-    //   userEmail: userEmail,
-    // };
-    // signUp(foundUser);
+    var config = {
+      method: 'post',
+      url: GRAPHQL_URI,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      data: loginData,
+    };
+
+    axios(config)
+      .then(function (response) {
+        console.log(JSON.stringify(response.data));
+        if (response.data.data.register.jwt) {
+          let foundUser = {
+            userToken: response.data.data.register.jwt,
+            userName: username,
+            password: password,
+            userEmail: userEmail,
+          };
+          signUp(foundUser);
+        }
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+
+    console.log(config);
   }
 
   const userInputChange = (val) => {
@@ -123,7 +147,6 @@ export function RegisterScreen() {
         onChangeText={(val) => userEmailInputChange(val)}
         onEndEditing={(e) => handleValidUser(e.nativeEvent.text)}
       />
-      {data.check_textInputChange ? <View></View> : null}
       <Text>Password</Text>
       <View>
         <TextInput
@@ -135,7 +158,12 @@ export function RegisterScreen() {
         />
       </View>
 
-      <Button onPress={register} title="Sign Up!" />
+      <Button
+        onPress={() => {
+          register();
+        }}
+        title="Sign Up!"
+      />
     </View>
   );
 }
