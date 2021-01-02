@@ -67,13 +67,6 @@ export function LoginScreen({navigation}) {
     }
   };
 
-  const updateSecureTextEntry = () => {
-    setData({
-      ...data,
-      secureTextEntry: !data.secureTextEntry,
-    });
-  };
-
   const handleValidUser = (val) => {
     if (val.trim().length >= 4) {
       setData({

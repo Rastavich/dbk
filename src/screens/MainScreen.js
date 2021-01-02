@@ -8,8 +8,7 @@ import {
   StatusBar,
   TouchableOpacity,
 } from 'react-native';
-import {NavigationContainer} from '@react-navigation/native';
-import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
+
 import {AuthContext, UserContext} from '../components/context';
 import axios from 'axios';
 import AsyncStorage from '@react-native-community/async-storage';
@@ -18,33 +17,13 @@ import {GET_ASSET_BY_USER} from '../graphql/requests';
 import {GRAPHQL_URI} from '../config/index';
 import {Card} from '../components/card';
 
-// TODO: TESTING this
-function HomeScreen() {
-  return (
-    <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-      <Text>Home!</Text>
-    </View>
-  );
-}
-
-function SettingsScreen() {
-  return (
-    <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-      <Text>Settings!</Text>
-    </View>
-  );
-}
-
 const Item = ({item, onPress, style}) => (
   <TouchableOpacity onPress={onPress} style={[styles.item, style]}>
     <Text style={styles.title}>{item.url}</Text>
   </TouchableOpacity>
 );
 
-const Tab = createBottomTabNavigator();
-
 export function MainScreen() {
-  const {signOut} = React.useContext(AuthContext);
   const {user, setUser} = useContext(UserContext);
   const [asset, setAsset] = React.useState([]);
   const [selectedId, setSelectedId] = React.useState(null);
@@ -102,36 +81,18 @@ export function MainScreen() {
   }, []);
 
   return (
-    <>
-      <NavigationContainer>
-        <Tab.Navigator>
-          <Tab.Screen name="Home" component={HomeScreen} />
-          <Tab.Screen name="Settings" component={SettingsScreen} />
-        </Tab.Navigator>
-      </NavigationContainer>
-      <View style={styles.container}>
-        <Text>HELLO {user.userName}</Text>
-        <Text>Your email is {user.userEmail}</Text>
-        <Card>
-          <Text>{user.userEmail}</Text>
-        </Card>
-        <FlatList
-          data={asset}
-          renderItem={renderItem}
-          keyExtractor={(item) => item.id}
-          extraData={selectedId}></FlatList>
-        <Button
-          title={'Logout'}
-          style={styles.button}
-          onPress={() => signOut()}
-        />
-        <Button
-          title={'Get Assets'}
-          style={styles.button}
-          onPress={() => getAuth()}
-        />
-      </View>
-    </>
+    <View style={styles.container}>
+      <FlatList
+        data={asset}
+        renderItem={renderItem}
+        keyExtractor={(item) => item.id}
+        extraData={selectedId}></FlatList>
+      {/* <Button
+        title={'Get Assets'}
+        style={styles.button}
+        onPress={() => getAuth()}
+      /> */}
+    </View>
   );
 }
 const styles = StyleSheet.create({
@@ -139,7 +100,7 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    marginTop: 100,
+    marginTop: 20,
   },
   button: {
     color: 'blue',

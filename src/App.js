@@ -3,16 +3,20 @@ import {InitialScreen} from './screens/InitialScreen';
 import {LoginScreen} from './screens/LoginScreen';
 import {MainScreen} from './screens/MainScreen';
 import {RegisterScreen} from './screens/RegisterScreen';
+import {SettingsScreen} from './screens/SettingsScreen';
 import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
 import {ApolloProvider, ApolloClient, InMemoryCache} from '@apollo/client';
-import {ActivityIndicator, Button, View} from 'react-native';
+import {ActivityIndicator, Button, View, Text} from 'react-native';
 import AsyncStorage from '@react-native-community/async-storage';
+
+import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
 
 import {link} from './graphql/link';
 import {AuthContext, UserContext} from './components/context';
 
 const Stack = createStackNavigator();
+const Tab = createMaterialTopTabNavigator();
 
 export default function () {
   const [user, setUser] = useState('');
@@ -179,10 +183,14 @@ export default function () {
         <ApolloProvider client={client}>
           <NavigationContainer>
             {loginState.userToken !== null ? (
-              <Stack.Navigator>
-                <Stack.Screen name={'MainScreen'} component={MainScreen} />
-              </Stack.Navigator>
+              <Tab.Navigator>
+                <Tab.Screen name={'Assets'} component={MainScreen} />
+                <Tab.Screen name={'Settings'} component={SettingsScreen} />
+              </Tab.Navigator>
             ) : (
+              // <Stack.Navigator>
+              //   <Stack.Screen name={'MainScreen'} component={MainScreen} />
+              // </Stack.Navigator>
               <Stack.Navigator
                 screenOptions={{
                   headerBackTitleVisible: false,
