@@ -1,21 +1,12 @@
 import React, {useContext, useEffect} from 'react';
-import {
-  View,
-  StyleSheet,
-  Text,
-  Button,
-  FlatList,
-  StatusBar,
-  TouchableOpacity,
-} from 'react-native';
+import {View, StyleSheet, Text, FlatList, TouchableOpacity} from 'react-native';
 
-import {AuthContext, UserContext} from '../components/context';
+import {UserContext} from '../components/context';
 import axios from 'axios';
 import AsyncStorage from '@react-native-community/async-storage';
 
 import {GET_ASSET_BY_USER} from '../graphql/requests';
 import {GRAPHQL_URI} from '../config/index';
-import {Card} from '../components/card';
 
 const Item = ({item, onPress, style}) => (
   <TouchableOpacity onPress={onPress} style={[styles.item, style]}>
@@ -27,6 +18,8 @@ export function MainScreen() {
   const {user, setUser} = useContext(UserContext);
   const [asset, setAsset] = React.useState([]);
   const [selectedId, setSelectedId] = React.useState(null);
+
+  let data = [];
 
   async function getAuth() {
     const userToken = await AsyncStorage.getItem('userToken');
@@ -48,21 +41,14 @@ export function MainScreen() {
       data: loginData,
     };
     await axios(config).then(function (response) {
-      let id = 0;
       response.data.data.user.digital_assets.map(function (asset) {
-        setAsset([
-          {
-            id: id + 1,
-            url: asset.url,
-          },
-        ]);
+        data.push(asset);
       });
-
-      console.log(asset);
+      setAsset(data);
     });
   }
 
-  // const renderItem = ({item}, index) => <Item key={index} title={item.url} />;
+  console.log(asset);
 
   const renderItem = ({item}) => {
     const backgroundColor = item.id === selectedId ? '#6e3b6e' : '#f9c2ff';
@@ -82,16 +68,15 @@ export function MainScreen() {
 
   return (
     <View style={styles.container}>
-      <FlatList
-        data={asset}
-        renderItem={renderItem}
-        keyExtractor={(item) => item.id}
-        extraData={selectedId}></FlatList>
-      {/* <Button
-        title={'Get Assets'}
-        style={styles.button}
-        onPress={() => getAuth()}
-      /> */}
+      {asset ? (
+        <FlatList
+          data={asset}
+          renderItem={renderItem}
+          keyExtractor={(item) => item.id}
+          extraData={selectedId}></FlatList>
+      ) : (
+        <Text>You do not have any digital assets, go ahead and add one!</Text>
+      )}
     </View>
   );
 }

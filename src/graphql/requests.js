@@ -14,7 +14,12 @@ export const GET_ASSET_BY_USER = `
   query GetAsset($id: ID!) {
     user(id: $id) {
       digital_assets {
+        id
         url
+        categories {
+          id 
+          type
+        }
       }
     }
   }
