@@ -1,21 +1,20 @@
 import React from 'react';
 import {
-  View,
   StyleSheet,
-  Text,
   ActivityIndicator,
   KeyboardAvoidingView,
 } from 'react-native';
+import {TextWhite, DefaultView} from '../components/generics/defaults';
 
 export function Loader(props) {
   return (
     <KeyboardAvoidingView
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
       style={styles.container}>
-      <View style={props.background}>
-        <Text>{props.text}</Text>
-        <ActivityIndicator style={styles.loader} size="large" color="black" />
-      </View>
+      <DefaultView>
+        <TextWhite text={props.text} />
+        <ActivityIndicator style={styles.loader} size="large" color="#F3F4F6" />
+      </DefaultView>
     </KeyboardAvoidingView>
   );
 }
@@ -24,10 +23,5 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     flexDirection: 'column',
-  },
-  loader: {
-    height: 40,
-    width: 250,
-    margin: 10,
   },
 });

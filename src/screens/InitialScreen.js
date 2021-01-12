@@ -1,38 +1,38 @@
 import React from 'react';
-import {View, StyleSheet, Text, Button} from 'react-native';
+import {Image, Text} from 'react-native';
+import {
+  DefaultButton,
+  DefaultView,
+  TextWhite,
+} from '../components/generics/defaults';
 
 export function InitialScreen({navigation}) {
   return (
-    <View style={styles.container}>
-      <Text>Welcome to Digital Business keys</Text>
+    <DefaultView>
+      <Image alt="Logo Image"></Image>
+      <Text style={{fontSize: 38, color: 'white'}}>Digital Business keys</Text>
 
-      <Button
-        title={'Login'}
-        style={styles.button}
+      <DefaultButton
+        text="Sign In"
         onPress={() => {
           navigation.navigate('LoginScreen');
         }}
       />
 
-      <Text>Don't have an account?</Text>
-      <Button
-        title={'Register'}
-        style={styles.button}
+      <DefaultButton
+        text="Sign Up"
         onPress={() => {
           navigation.navigate('RegisterScreen');
         }}
       />
-    </View>
+
+      <TextWhite
+        text="I don't know man, Italy, Greece, Argentina... It's fine, everythings is
+        fine. theres an infinite number of realities Morty, and in a few dozens
+        of those i got lucky and turned everything back to normal. Shadow
+        Jacker, you haven't come out of your masturbation cave in eons! Allahu
+        blehhhh Akbar!"
+      />
+    </DefaultView>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  button: {
-    color: 'blue',
-  },
-});

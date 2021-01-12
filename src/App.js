@@ -189,6 +189,7 @@ export default function () {
               <Stack.Navigator
                 screenOptions={{
                   headerBackTitleVisible: false,
+                  headerShown: false,
                   headerTintColor: 'black',
                 }}>
                 <Stack.Screen

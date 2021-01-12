@@ -7,9 +7,7 @@
     "ios": "react-native run-ios",
     "start": "react-native start",
     "test": "jest",
-    "lint": "eslint .",
-    "rundev": "react-native start && react-native run-android"
-    
+    "lint": "eslint ."
   },
   "dependencies": {
     "@apollo/client": "^3.0.0-beta.41",

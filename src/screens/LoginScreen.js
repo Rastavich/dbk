@@ -4,21 +4,23 @@ import axios from 'axios';
 import {
   View,
   StyleSheet,
-  Text,
   TextInput,
-  TouchableOpacity,
-  ImageBackground,
   Dimensions,
   KeyboardAvoidingView,
   Alert,
 } from 'react-native';
+import {
+  DefaultButton,
+  DefaultView,
+  BackButton,
+} from '../components/generics/defaults';
 
 import {BASE_LOGIN_URI} from '../config';
 import {AuthContext, UserContext} from '../components/context';
 import {Loader} from '../components/loader';
 
-const background = require('../assets/images/login_bg.jpg');
 const {width, height} = Dimensions.get('window');
+var theme = require('../styles/theme');
 
 export function LoginScreen({navigation}) {
   const {user, setUser} = React.useContext(UserContext);
@@ -98,6 +100,7 @@ export function LoginScreen({navigation}) {
         'Username or password field cannot be empty.',
         [{text: 'Okay'}],
       );
+      setIsLoading(false);
       return;
     }
 
@@ -105,6 +108,7 @@ export function LoginScreen({navigation}) {
       Alert.alert('Invalid User!', 'Username or password is incorrect.', [
         {text: 'Okay'},
       ]);
+      setIsLoading(false);
       return;
     }
 
@@ -130,16 +134,15 @@ export function LoginScreen({navigation}) {
         Alert.alert('Invalid User!', 'Username or password is incorrect.', [
           {text: 'Okay'},
         ]);
+        setIsLoading(false);
         return;
       });
   }
 
   return (
-    <View style={styles.container}>
-      <ImageBackground
-        source={background}
-        style={styles.background}
-        resizeMode="cover">
+    <>
+      <BackButton />
+      <DefaultView>
         <View style={styles.halfHeight}></View>
         <View style={styles.quarterHeight}>
           {isLoading ? (
@@ -153,7 +156,7 @@ export function LoginScreen({navigation}) {
               style={styles.container}>
               <View style={styles.inputBackground}>
                 <TextInput
-                  style={styles.textInput}
+                  style={theme.textInput}
                   placeholder="Your Username"
                   placeholderTextColor="#666666"
                   autoCapitalize="none"
@@ -162,34 +165,31 @@ export function LoginScreen({navigation}) {
                 />
 
                 <TextInput
-                  style={styles.textInput}
+                  style={theme.textInput}
                   placeholder="Your Password"
                   placeholderTextColor="#666666"
                   secureTextEntry={data.secureTextEntry ? true : false}
                   autoCapitalize="none"
                   onChangeText={(val) => handlePasswordChange(val)}
                 />
-
-                <TouchableOpacity
-                  style={styles.button}
+                <DefaultButton
+                  text="Sign In"
                   onPress={() => {
                     loginHandle(data.username, data.password);
-                  }}>
-                  <Text styles={styles.text}>Sign In</Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                  style={styles.button}
+                  }}
+                />
+                <DefaultButton
+                  text="Sign Up"
                   onPress={() => {
                     signOut();
-                  }}>
-                  <Text styles={styles.buttonText}>Sign Out</Text>
-                </TouchableOpacity>
+                  }}
+                />
               </View>
             </KeyboardAvoidingView>
           )}
         </View>
-      </ImageBackground>
-    </View>
+      </DefaultView>
+    </>
   );
 }
 
@@ -197,6 +197,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     flexDirection: 'column',
+    backgroundColor: '#111827',
   },
   halfHeight: {
     flex: 1,
@@ -207,21 +208,6 @@ const styles = StyleSheet.create({
     flex: 3,
     alignItems: 'center',
     justifyContent: 'center',
-  },
-  button: {
-    backgroundColor: 'lightblue',
-    margin: 5,
-    width: 200,
-    padding: 10,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  textInput: {
-    height: 40,
-    width: 250,
-    borderColor: 'lightblue',
-    borderWidth: 1,
-    margin: 10,
   },
   loader: {
     height: 40,
@@ -234,8 +220,8 @@ const styles = StyleSheet.create({
     height,
   },
   inputBackground: {
-    backgroundColor: '#fff',
-    borderColor: 'lightblue',
+    backgroundColor: '#111827',
+    borderColor: '#6366F1',
     alignItems: 'center',
     justifyContent: 'center',
     borderWidth: 1,

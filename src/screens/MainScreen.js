@@ -7,6 +7,7 @@ import AsyncStorage from '@react-native-community/async-storage';
 
 import {GET_ASSET_BY_USER} from '../graphql/requests';
 import {GRAPHQL_URI} from '../config/index';
+import {DefaultView} from '../components/generics/defaults';
 
 const Item = ({item, onPress, style}) => (
   <TouchableOpacity onPress={onPress} style={[styles.item, style]}>
@@ -67,7 +68,7 @@ export function MainScreen() {
   }, []);
 
   return (
-    <View style={styles.container}>
+    <DefaultView>
       {asset ? (
         <FlatList
           data={asset}
@@ -77,26 +78,6 @@ export function MainScreen() {
       ) : (
         <Text>You do not have any digital assets, go ahead and add one!</Text>
       )}
-    </View>
+    </DefaultView>
   );
 }
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginTop: 20,
-  },
-  button: {
-    color: 'blue',
-  },
-  item: {
-    backgroundColor: '#f9c2ff',
-    padding: 20,
-    marginVertical: 8,
-    marginHorizontal: 16,
-  },
-  title: {
-    fontSize: 32,
-  },
-});
