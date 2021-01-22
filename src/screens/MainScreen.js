@@ -25,6 +25,13 @@ export function MainScreen() {
   async function getAuth() {
     const userToken = await AsyncStorage.getItem('userToken');
 
+    console.log(['USER TOKEN: ', userToken]);
+    console.log(['USER: ', user]);
+
+    if (user == '') {
+      AsyncStorage.removeItem('userToken');
+    }
+
     var loginData = JSON.stringify({
       query: GET_ASSET_BY_USER,
       variables: {
@@ -43,13 +50,17 @@ export function MainScreen() {
     };
     await axios(config).then(function (response) {
       response.data.data.user.digital_assets.map(function (asset) {
-        data.push(asset);
+        // console.log(asset);
+        asset.websites.map(function (site) {
+          data.push(site);
+        });
       });
+
       setAsset(data);
     });
   }
 
-  console.log(asset);
+  console.log(['Asset Log: ', asset]);
 
   const renderItem = ({item}) => {
     const backgroundColor = item.id === selectedId ? '#6e3b6e' : '#f9c2ff';
@@ -70,14 +81,27 @@ export function MainScreen() {
   return (
     <DefaultView>
       {asset ? (
-        <FlatList
-          data={asset}
-          renderItem={renderItem}
-          keyExtractor={(item) => item.id}
-          extraData={selectedId}></FlatList>
+        <>
+          <FlatList
+            data={asset}
+            renderItem={renderItem}
+            keyExtractor={(item) => item.id}
+            extraData={selectedId}>
+            <Text>{asset.url}</Text>
+          </FlatList>
+        </>
       ) : (
         <Text>You do not have any digital assets, go ahead and add one!</Text>
       )}
     </DefaultView>
   );
 }
+
+const styles = StyleSheet.create({
+  item: {
+    backgroundColor: '#f9c2ff',
+    padding: 20,
+    marginVertical: 8,
+    marginHorizontal: 16,
+  },
+});
