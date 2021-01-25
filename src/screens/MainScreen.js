@@ -10,8 +10,20 @@ const Stack = createStackNavigator();
 export function MainScreen({navigation}) {
   return (
     <Stack.Navigator>
-      <Stack.Screen name="AssetListScreen" component={AssetListScreen} />
-      <Stack.Screen name="DetailsScreen" component={DetailsScreen} />
+      <Stack.Screen
+        name="AssetListScreen"
+        component={AssetListScreen}
+        options={{
+          headerShown: false,
+        }}
+      />
+      <Stack.Screen
+        name="DetailsScreen"
+        component={DetailsScreen}
+        options={{
+          headerShown: false,
+        }}
+      />
     </Stack.Navigator>
   );
 }

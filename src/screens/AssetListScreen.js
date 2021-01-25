@@ -1,5 +1,12 @@
 import React, {useContext, useEffect} from 'react';
-import {StyleSheet, Text, FlatList, TouchableOpacity} from 'react-native';
+import {
+  StyleSheet,
+  Text,
+  FlatList,
+  TouchableOpacity,
+  Button,
+  View,
+} from 'react-native';
 
 import {UserContext} from '../components/context';
 import axios from 'axios';
@@ -7,7 +14,7 @@ import AsyncStorage from '@react-native-community/async-storage';
 
 import {GET_ASSET_BY_USER} from '../graphql/requests';
 import {GRAPHQL_URI} from '../config/index';
-import {DefaultView} from '../components/generics/defaults';
+import {BackButton, DefaultView} from '../components/generics/defaults';
 
 const Item = ({item, onPress, style}) => (
   <TouchableOpacity onPress={onPress} style={[styles.item, style]}>
@@ -28,9 +35,9 @@ export function AssetListScreen({navigation}) {
     console.log(['USER TOKEN: ', userToken]);
     console.log(['USER: ', user]);
 
-    if (user == '') {
-      AsyncStorage.removeItem('userToken');
-    }
+    // if (user == '') {
+    //   AsyncStorage.removeItem('userToken');
+    // }
 
     var loginData = JSON.stringify({
       query: GET_ASSET_BY_USER,
@@ -92,6 +99,9 @@ export function AssetListScreen({navigation}) {
     <DefaultView>
       {asset ? (
         <>
+          <View>
+            <BackButton />
+          </View>
           <FlatList
             data={asset}
             renderItem={renderItem}
