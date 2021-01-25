@@ -4,6 +4,7 @@ import {LoginScreen} from './screens/LoginScreen';
 import {MainScreen} from './screens/MainScreen';
 import {RegisterScreen} from './screens/RegisterScreen';
 import {SettingsScreen} from './screens/SettingsScreen';
+import {DetailsScreen} from './screens/DetailsScreen';
 import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
 import {ApolloProvider, ApolloClient, InMemoryCache} from '@apollo/client';
@@ -178,10 +179,16 @@ export default function () {
         <ApolloProvider client={client}>
           <NavigationContainer>
             {loginState.userToken !== null ? (
-              <Tab.Navigator>
-                <Tab.Screen name={'Assets'} component={MainScreen} />
-                <Tab.Screen name={'Settings'} component={SettingsScreen} />
-              </Tab.Navigator>
+              <>
+                <Tab.Navigator>
+                  <Tab.Screen name={'Assets'} component={MainScreen} />
+                  <Tab.Screen name={'Settings'} component={SettingsScreen} />
+                </Tab.Navigator>
+                <Stack.Screen
+                  name={'DetailsScreen'}
+                  component={DetailsScreen}
+                />
+              </>
             ) : (
               // <Stack.Navigator>
               //   <Stack.Screen name={'MainScreen'} component={MainScreen} />

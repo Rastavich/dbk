@@ -9,7 +9,7 @@ module.exports = StyleSheet.create({
   defaultButton: {
     backgroundColor: '#6366F1',
     margin: 5,
-    width: 200,
+    width: 250,
     height: 60,
     padding: 10,
     justifyContent: 'center',

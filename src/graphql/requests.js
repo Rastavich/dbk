@@ -16,6 +16,7 @@ export const GET_ASSET_BY_USER = `
       digital_assets {
         websites {
           url
+          serviceStatus
           domain_name_server {
             username
             password
