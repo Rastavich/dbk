@@ -35,12 +35,22 @@ module.exports = StyleSheet.create({
     alignContent: 'center',
     textAlign: 'center',
   },
+  textPurp: {
+    color: '#6366F1',
+    fontSize: 18,
+    alignContent: 'center',
+    textAlign: 'center',
+  },
 
   // Containers
   container: {
     flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
     backgroundColor: '#111827',
+  },
+  backButton: {
+    left: 5,
+    marginTop: 5,
+    width: 24,
+    height: 24,
   },
 });

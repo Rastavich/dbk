@@ -1,4 +1,5 @@
 import React from 'react';
+import Svg, {Rect, Polygon, G} from 'react-native-svg';
 import {TouchableOpacity, Text, View, Image} from 'react-native';
 var theme = require('../../styles/theme');
 
@@ -18,15 +19,34 @@ export function TextWhite({text}) {
   return <Text style={theme.textWhite}>{text}</Text>;
 }
 
-export function TextHeadingWhite({text}) {}
+export function TextWhiteLink({text, onPress}) {
+  return (
+    <TouchableOpacity onPress={onPress}>
+      <Text style={theme.textWhite}>{text}</Text>
+    </TouchableOpacity>
+  );
+}
+
+export function TextHeadingPurp({text}) {
+  return <Text style={theme.textPurp}>{text}</Text>;
+}
 
 export function BackButton({onPress}) {
   return (
     <TouchableOpacity style={theme.backButton} onPress={onPress}>
-      <Image
-        // style={styles.tinyLogo}
-        source={require('../../assets/icons/backButton.svg')}
-      />
+      <Svg
+        enable-background="new 0 0 24 24"
+        height="24"
+        viewBox="0 0 24 24"
+        width="24">
+        <Rect fill="none" height="24" width="24" backgroundColor="white" />
+        <G>
+          <Polygon
+            points="17.77,3.77 16,2 6,12 16,22 17.77,20.23 9.54,12"
+            fill="white"
+          />
+        </G>
+      </Svg>
     </TouchableOpacity>
   );
 }

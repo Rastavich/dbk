@@ -14,7 +14,11 @@ import AsyncStorage from '@react-native-community/async-storage';
 
 import {GET_ASSET_BY_USER} from '../graphql/requests';
 import {GRAPHQL_URI} from '../config/index';
-import {BackButton, DefaultView} from '../components/generics/defaults';
+import {
+  BackButton,
+  DefaultView,
+  TextHeadingPurp,
+} from '../components/generics/defaults';
 
 const Item = ({item, onPress, style}) => (
   <TouchableOpacity onPress={onPress} style={[styles.item, style]}>
@@ -99,8 +103,11 @@ export function AssetListScreen({navigation}) {
     <DefaultView>
       {asset ? (
         <>
-          <View>
+          <View style={styles.header}>
             <BackButton />
+            <View style={styles.headText}>
+              <TextHeadingPurp text="Your Digital Assets" />
+            </View>
           </View>
           <FlatList
             data={asset}
@@ -123,5 +130,16 @@ const styles = StyleSheet.create({
     padding: 20,
     marginVertical: 8,
     marginHorizontal: 16,
+  },
+  header: {
+    flexDirection: 'row',
+    display: 'flex',
+    padding: 10,
+  },
+  headText: {
+    marginLeft: 80,
+    marginTop: 4,
+    textAlign: 'center',
+    alignItems: 'center',
   },
 });

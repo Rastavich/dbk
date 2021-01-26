@@ -11,31 +11,33 @@ const logo = '../assets/images/logo.png';
 export function InitialScreen({navigation}) {
   return (
     <DefaultView>
-      <Image source={require(logo)} alt="Logo Image" style={styles.logo} />
+      <View>
+        <Image source={require(logo)} alt="Logo Image" style={styles.logo} />
 
-      <DefaultButton
-        text="Login"
-        onPress={() => {
-          navigation.navigate('LoginScreen');
-        }}
-      />
+        <DefaultButton
+          text="Login"
+          onPress={() => {
+            navigation.navigate('LoginScreen');
+          }}
+        />
 
-      <DefaultButton
-        text="Sign Up"
-        onPress={() => {
-          navigation.navigate('RegisterScreen');
-        }}
-        style={styles.button}
-      />
+        <DefaultButton
+          text="Sign Up"
+          onPress={() => {
+            navigation.navigate('RegisterScreen');
+          }}
+          style={styles.button}
+        />
 
-      <View style={styles.text}>
-        <TextWhite
-          text="I don't know man, Italy, Greece, Argentina... It's fine, everythings is
+        <View style={styles.text}>
+          <TextWhite
+            text="I don't know man, Italy, Greece, Argentina... It's fine, everythings is
         fine. theres an infinite number of realities Morty, and in a few dozens
         of those i got lucky and turned everything back to normal. Shadow
         Jacker, you haven't come out of your masturbation cave in eons! Allahu
         blehhhh Akbar!"
-        />
+          />
+        </View>
       </View>
     </DefaultView>
   );

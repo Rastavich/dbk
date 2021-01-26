@@ -1,14 +1,12 @@
-import React, {useContext, useEffect} from 'react';
-import {
-  View,
-  StyleSheet,
-  Text,
-  FlatList,
-  StatusBar,
-  TouchableOpacity,
-} from 'react-native';
+import React, {useContext} from 'react';
+import {View, StyleSheet, Text} from 'react-native';
 
-import {DefaultButton} from '../components/generics/defaults';
+import {
+  DefaultButton,
+  DefaultView,
+  TextWhite,
+  TextWhiteLink,
+} from '../components/generics/defaults';
 import {AuthContext, UserContext} from '../components/context';
 
 export function SettingsScreen() {
@@ -17,17 +15,19 @@ export function SettingsScreen() {
 
   return (
     <>
-      <View style={styles.container}>
-        <Text>{user.userName}</Text>
-        <Text>Email: {user.userEmail}</Text>
-        <DefaultButton text="Reset Password" />
-      </View>
-      <View>
-        <Text>{user.abn}</Text>
-      </View>
-      <View style={styles.btmBtn}>
-        <DefaultButton text="Logout" onPress={() => signOut()} />
-      </View>
+      <DefaultView>
+        <View style={styles.container}>
+          <TextWhite text={user.userName} />
+          <TextWhite text={user.userEmail} />
+        </View>
+        <View>
+          <Text>{user.abn}</Text>
+        </View>
+        <View style={styles.btmBtn}>
+          <TextWhiteLink text="Reset Password" />
+          <DefaultButton text="Logout" onPress={() => signOut()} />
+        </View>
+      </DefaultView>
     </>
   );
 }
