@@ -11,7 +11,7 @@ const logo = '../assets/images/logo.png';
 export function InitialScreen({navigation}) {
   return (
     <DefaultView>
-      <View>
+      <View style={styles.container}>
         <Image source={require(logo)} alt="Logo Image" style={styles.logo} />
 
         <DefaultButton
@@ -51,5 +51,11 @@ const styles = StyleSheet.create({
   text: {
     marginTop: 50,
     width: 300,
+  },
+  container: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginTop: 20,
   },
 });

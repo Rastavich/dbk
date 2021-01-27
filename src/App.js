@@ -180,7 +180,19 @@ export default function () {
           <NavigationContainer>
             {loginState.userToken !== null ? (
               <>
-                <Tab.Navigator>
+                <Tab.Navigator
+                  tabBarOptions={{
+                    activeTintColor: '#FFFFFF',
+                    inactiveTintColor: '#000',
+                    style: {backgroundColor: '#111827'},
+                    labelStyle: {
+                      textAlign: 'center',
+                      color: '#fff',
+                    },
+                    indicatorStyle: {
+                      borderBottomColor: '#111827',
+                    },
+                  }}>
                   <Tab.Screen name={'Assets'} component={MainScreen} />
                   <Tab.Screen name={'Settings'} component={SettingsScreen} />
                 </Tab.Navigator>

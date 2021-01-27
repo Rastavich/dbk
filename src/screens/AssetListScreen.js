@@ -1,12 +1,5 @@
 import React, {useContext, useEffect} from 'react';
-import {
-  StyleSheet,
-  Text,
-  FlatList,
-  TouchableOpacity,
-  Button,
-  View,
-} from 'react-native';
+import {StyleSheet, Text, FlatList, TouchableOpacity, View} from 'react-native';
 
 import {UserContext} from '../components/context';
 import axios from 'axios';
@@ -14,15 +7,18 @@ import AsyncStorage from '@react-native-community/async-storage';
 
 import {GET_ASSET_BY_USER} from '../graphql/requests';
 import {GRAPHQL_URI} from '../config/index';
-import {
-  BackButton,
-  DefaultView,
-  TextHeadingPurp,
-} from '../components/generics/defaults';
+import {DefaultView, TextHeadingPurp} from '../components/generics/defaults';
 
 const Item = ({item, onPress, style}) => (
   <TouchableOpacity onPress={onPress} style={[styles.item, style]}>
-    <Text style={styles.title}>{item.url}</Text>
+    <View style={styles.cardContent}>
+      <Text style={styles.pill}>{item.url}</Text>
+      {item.serviceStatus ? (
+        <Text style={styles.pill}>Status: Up!</Text>
+      ) : (
+        <Text style={styles.pill}>Status: Down!</Text>
+      )}
+    </View>
   </TouchableOpacity>
 );
 
@@ -38,10 +34,6 @@ export function AssetListScreen({navigation}) {
 
     console.log(['USER TOKEN: ', userToken]);
     console.log(['USER: ', user]);
-
-    // if (user == '') {
-    //   AsyncStorage.removeItem('userToken');
-    // }
 
     var loginData = JSON.stringify({
       query: GET_ASSET_BY_USER,
@@ -61,7 +53,6 @@ export function AssetListScreen({navigation}) {
     };
     await axios(config).then(function (response) {
       response.data.data.user.digital_assets.map(function (asset) {
-        // console.log(asset);
         asset.websites.map(function (site) {
           data.push(site);
         });
@@ -84,14 +75,14 @@ export function AssetListScreen({navigation}) {
       <Item
         item={item}
         onPress={() => openItem(item)}
-        style={{backgroundColor}}
-      />
+        style={{backgroundColor}}></Item>
     );
   };
 
-  const openItem = ({item}) => {
+  const openItem = (item) => {
+    console.log(['Item on click: ', item]);
     navigation.navigate('DetailsScreen', {
-      params: domain_name_server,
+      selected: item,
     });
   };
 
@@ -104,7 +95,6 @@ export function AssetListScreen({navigation}) {
       {asset ? (
         <>
           <View style={styles.header}>
-            <BackButton />
             <View style={styles.headText}>
               <TextHeadingPurp text="Your Digital Assets" />
             </View>
@@ -113,9 +103,7 @@ export function AssetListScreen({navigation}) {
             data={asset}
             renderItem={renderItem}
             keyExtractor={(item) => item.id}
-            extraData={selectedId}>
-            <Text>{asset.url}</Text>
-          </FlatList>
+            extraData={selectedId}></FlatList>
         </>
       ) : (
         <Text>You do not have any digital assets, go ahead and add one!</Text>
@@ -127,9 +115,11 @@ export function AssetListScreen({navigation}) {
 const styles = StyleSheet.create({
   item: {
     backgroundColor: '#f9c2ff',
-    padding: 20,
+    padding: 10,
+    height: 75,
     marginVertical: 8,
     marginHorizontal: 16,
+    zIndex: 1,
   },
   header: {
     flexDirection: 'row',
@@ -137,9 +127,23 @@ const styles = StyleSheet.create({
     padding: 10,
   },
   headText: {
-    marginLeft: 80,
+    marginLeft: 100,
     marginTop: 4,
     textAlign: 'center',
     alignItems: 'center',
+  },
+  pill: {
+    backgroundColor: '#fff',
+    borderRadius: 5,
+    width: 160,
+    borderColor: '#000',
+    zIndex: 10,
+    padding: 3,
+    marginRight: 10,
+  },
+  cardContent: {
+    margin: 2,
+    display: 'flex',
+    flexDirection: 'row',
   },
 });
