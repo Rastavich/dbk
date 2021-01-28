@@ -103,6 +103,7 @@ export function AssetListScreen({navigation}) {
             data={asset}
             renderItem={renderItem}
             keyExtractor={(item) => item.id}
+            key={(item) => item.id}
             extraData={selectedId}></FlatList>
         </>
       ) : (
