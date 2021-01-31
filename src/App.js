@@ -8,7 +8,7 @@ import {DetailsScreen} from './screens/DetailsScreen';
 import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
 import {ApolloProvider, ApolloClient, InMemoryCache} from '@apollo/client';
-import {ActivityIndicator, Button, View, Text} from 'react-native';
+import {ActivityIndicator, View} from 'react-native';
 import AsyncStorage from '@react-native-community/async-storage';
 
 import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';

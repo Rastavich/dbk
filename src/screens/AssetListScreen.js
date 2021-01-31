@@ -1,13 +1,17 @@
 import React, {useContext, useEffect} from 'react';
 import {StyleSheet, Text, FlatList, TouchableOpacity, View} from 'react-native';
 
-import {UserContext} from '../components/context';
+import {UserContext, AuthContext} from '../components/context';
 import axios from 'axios';
 import AsyncStorage from '@react-native-community/async-storage';
 
 import {GET_ASSET_BY_USER} from '../graphql/requests';
 import {GRAPHQL_URI} from '../config/index';
-import {DefaultView, TextHeadingPurp} from '../components/generics/defaults';
+import {
+  DefaultView,
+  TextHeadingPurp,
+  TextWhite,
+} from '../components/generics/defaults';
 
 const Item = ({item, onPress, style}) => (
   <TouchableOpacity onPress={onPress} style={[styles.item, style]}>
@@ -23,6 +27,7 @@ const Item = ({item, onPress, style}) => (
 );
 
 export function AssetListScreen({navigation}) {
+  const {signOut} = React.useContext(AuthContext);
   const {user, setUser} = useContext(UserContext);
   const [asset, setAsset] = React.useState([]);
   const [selectedId, setSelectedId] = React.useState(null);
@@ -34,6 +39,10 @@ export function AssetListScreen({navigation}) {
 
     console.log(['USER TOKEN: ', userToken]);
     console.log(['USER: ', user]);
+
+    if (user == '') {
+      signOut();
+    }
 
     var loginData = JSON.stringify({
       query: GET_ASSET_BY_USER,
@@ -51,15 +60,19 @@ export function AssetListScreen({navigation}) {
       },
       data: loginData,
     };
-    await axios(config).then(function (response) {
-      response.data.data.user.digital_assets.map(function (asset) {
-        asset.websites.map(function (site) {
-          data.push(site);
+    await axios(config)
+      .then(function (response) {
+        response.data.data.user.digital_assets.map(function (asset) {
+          asset.websites.map(function (site) {
+            data.push(site);
+          });
         });
-      });
 
-      setAsset(data);
-    });
+        setAsset(data);
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
   }
 
   console.log(['Asset Log: ', asset]);
@@ -92,7 +105,7 @@ export function AssetListScreen({navigation}) {
 
   return (
     <DefaultView>
-      {asset ? (
+      {asset.length > 0 ? (
         <>
           <View style={styles.header}>
             <View style={styles.headText}>
@@ -107,7 +120,11 @@ export function AssetListScreen({navigation}) {
             extraData={selectedId}></FlatList>
         </>
       ) : (
-        <Text>You do not have any digital assets, go ahead and add one!</Text>
+        <DefaultView>
+          <View style={styles.container}>
+            <TextWhite text="You do not have any digital assets, go ahead and add some!" />
+          </View>
+        </DefaultView>
       )}
     </DefaultView>
   );
@@ -121,6 +138,12 @@ const styles = StyleSheet.create({
     marginVertical: 8,
     marginHorizontal: 16,
     zIndex: 1,
+  },
+  container: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginTop: 20,
   },
   header: {
     flexDirection: 'row',

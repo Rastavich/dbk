@@ -8,6 +8,7 @@ import {
   Dimensions,
   KeyboardAvoidingView,
   Alert,
+  Image,
 } from 'react-native';
 import {
   DefaultButton,
@@ -21,6 +22,7 @@ import {Loader} from '../components/loader';
 
 const {width, height} = Dimensions.get('window');
 var theme = require('../styles/theme');
+const logo = '../assets/images/logo.png';
 
 export function LoginScreen({navigation}) {
   const {user, setUser} = React.useContext(UserContext);
@@ -141,19 +143,30 @@ export function LoginScreen({navigation}) {
 
   return (
     <>
-      <BackButton />
       <DefaultView>
-        <View style={styles.halfHeight}></View>
+        <BackButton onPress={() => navigation.goBack()} />
         <View style={styles.quarterHeight}>
           {isLoading ? (
-            <Loader
-              text="Logging you in now"
-              background={styles.inputBackground}
-            />
+            <>
+              <Image
+                source={require(logo)}
+                alt="Logo Image"
+                style={styles.logo}
+              />
+              <Loader
+                text="Logging you in now"
+                background={styles.inputBackground}
+              />
+            </>
           ) : (
             <KeyboardAvoidingView
               behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
               style={styles.container}>
+              <Image
+                source={require(logo)}
+                alt="Logo Image"
+                style={styles.logo}
+              />
               <View style={styles.inputBackground}>
                 <TextInput
                   style={theme.textInput}
@@ -178,12 +191,6 @@ export function LoginScreen({navigation}) {
                     loginHandle(data.username, data.password);
                   }}
                 />
-                <DefaultButton
-                  text="Sign Up"
-                  onPress={() => {
-                    signOut();
-                  }}
-                />
               </View>
             </KeyboardAvoidingView>
           )}
@@ -200,7 +207,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#111827',
   },
   halfHeight: {
-    flex: 1,
+    flex: 0,
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -232,5 +239,9 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  logo: {
+    height: 300,
+    width: 300,
   },
 });
