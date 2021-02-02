@@ -13,7 +13,7 @@ export const GET_USER_BY_ID = gql`
 export const GET_ASSET_BY_USER = `
   query GetAsset($id: ID!) {
     user(id: $id) {
-      digital_assets {
+      digital_asset {
         websites {
           url
           serviceStatus

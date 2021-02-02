@@ -10,24 +10,10 @@ import {GRAPHQL_URI} from '../config/index';
 import {
   DefaultView,
   TextHeadingPurp,
-  TextWhite,
-  DefaultButton,
+  BackButton,
 } from '../components/generics/defaults';
 
-const Item = ({item, onPress, style}) => (
-  <TouchableOpacity onPress={onPress} style={[styles.item, style]}>
-    <View style={styles.cardContent}>
-      <Text style={styles.pill}>{item.url}</Text>
-      {item.serviceStatus ? (
-        <Text style={styles.pill}>Status: Up!</Text>
-      ) : (
-        <Text style={styles.pill}>Status: Down!</Text>
-      )}
-    </View>
-  </TouchableOpacity>
-);
-
-export function AssetListScreen({navigation}) {
+export function AddAssetScreen({navigation}) {
   const {signOut} = React.useContext(AuthContext);
   const {user, setUser} = useContext(UserContext);
   const [asset, setAsset] = React.useState([]);
@@ -63,16 +49,10 @@ export function AssetListScreen({navigation}) {
     };
     await axios(config)
       .then(function (response) {
-        // console.log([
-        //   'Get Asset Response: ',
-        //   response.data.data.user.digital_asset.websites,
-        // ]);
-        response.data.data.user.digital_asset.websites.map(function (asset) {
-          data.push(asset);
-          // console.log(['Get Nested Response: ', asset]);
-          // asset.websites.map(function (site) {
-
-          // });
+        response.data.data.user.digital_assets.map(function (asset) {
+          asset.websites.map(function (site) {
+            data.push(site);
+          });
         });
 
         setAsset(data);
@@ -82,63 +62,20 @@ export function AssetListScreen({navigation}) {
       });
   }
 
-  console.log(['Asset Log: ', asset]);
-  if (asset.length > 0) {
-    var {domain_name_server} = asset[0];
-    console.log(['DNS destructuring: ', domain_name_server]);
-  }
-
-  const renderItem = ({item}) => {
-    const backgroundColor = item.id === selectedId ? '#6e3b6e' : '#f9c2ff';
-
-    return (
-      <Item
-        item={item}
-        onPress={() => openItem(item)}
-        style={{backgroundColor}}></Item>
-    );
-  };
-
-  const openItem = (item) => {
-    console.log(['Item on click: ', item]);
-    navigation.navigate('DetailsScreen', {
-      selected: item,
-    });
-  };
-
   useEffect(() => {
     getAuth();
   }, []);
 
   return (
     <DefaultView>
-      {asset.length > 0 ? (
-        <>
-          <View style={styles.header}>
-            <View style={styles.headText}>
-              <TextHeadingPurp text="Your Digital Assets" />
-            </View>
+      <BackButton onPress={() => navigation.goBack()} />
+      <>
+        <View style={styles.header}>
+          <View style={styles.headText}>
+            <TextHeadingPurp text="Create an Asset" />
           </View>
-          <FlatList
-            data={asset}
-            renderItem={renderItem}
-            keyExtractor={(item) => item.id}
-            key={(item) => item.id}
-            extraData={selectedId}></FlatList>
-        </>
-      ) : (
-        <DefaultView>
-          <View style={styles.container}>
-            <TextWhite text="You do not have any digital assets, go ahead and add some!" />
-            <DefaultButton
-              text="Add"
-              onPress={() => {
-                navigation.navigate('AddAssetScreen');
-              }}
-            />
-          </View>
-        </DefaultView>
-      )}
+        </View>
+      </>
     </DefaultView>
   );
 }
