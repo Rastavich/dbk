@@ -13,7 +13,7 @@ import {
 import {
   DefaultButton,
   DefaultView,
-  BackButton,
+  DefaultHeader,
 } from '../components/generics/defaults';
 
 import {BASE_LOGIN_URI} from '../config';
@@ -144,7 +144,7 @@ export function LoginScreen({navigation}) {
   return (
     <>
       <DefaultView>
-        <BackButton onPress={() => navigation.goBack()} />
+        <DefaultHeader onPress={() => navigation.goBack()} />
         <View style={styles.quarterHeight}>
           {isLoading ? (
             <>

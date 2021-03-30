@@ -27,26 +27,27 @@ export function TextWhiteLink({text, onPress}) {
   );
 }
 
-export function TextHeadingPurp({text}) {
-  return <Text style={theme.textPurp}>{text}</Text>;
-}
-
-export function BackButton({onPress}) {
+export function DefaultHeader({onPress, text}) {
   return (
-    <TouchableOpacity style={theme.backButton} onPress={onPress}>
-      <Svg
-        enable-background="new 0 0 24 24"
-        height="24"
-        viewBox="0 0 24 24"
-        width="24">
-        <Rect fill="none" height="24" width="24" backgroundColor="white" />
-        <G>
-          <Polygon
-            points="17.77,3.77 16,2 6,12 16,22 17.77,20.23 9.54,12"
-            fill="white"
-          />
-        </G>
-      </Svg>
-    </TouchableOpacity>
+    <>
+      {onPress && (
+        <TouchableOpacity style={theme.DefaultHeader} onPress={onPress}>
+          <Svg
+            enable-background="new 0 0 24 24"
+            height="24"
+            viewBox="0 0 24 24"
+            width="24">
+            <Rect fill="none" height="24" width="24" backgroundColor="white" />
+            <G>
+              <Polygon
+                points="17.77,3.77 16,2 6,12 16,22 17.77,20.23 9.54,12"
+                fill="white"
+              />
+            </G>
+          </Svg>
+        </TouchableOpacity>
+      )}
+      <Text style={theme.textPurp}>{text}</Text>
+    </>
   );
 }

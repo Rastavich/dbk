@@ -1,6 +1,4 @@
-import {gql} from '@apollo/client';
-
-export const GET_USER_BY_ID = gql`
+export const GET_USER_BY_ID = `
   {
     digitalAssets {
       id
@@ -41,4 +39,8 @@ export const REGISTER_USER = `
       }
     }
   }
+`;
+
+export const CREATE_ASSET = `
+  
 `;

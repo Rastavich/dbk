@@ -8,7 +8,7 @@ import {
   KeyboardAvoidingView,
 } from 'react-native';
 import {
-  BackButton,
+  DefaultHeader,
   DefaultView,
   DefaultButton,
 } from '../components/generics/defaults';
@@ -159,7 +159,7 @@ export function RegisterScreen({navigation}) {
   return (
     <>
       <DefaultView>
-        <BackButton onPress={() => navigation.goBack()} />
+        <DefaultHeader onPress={() => navigation.goBack()} />
         <View style={styles.quarterHeight}>
           {isLoading ? (
             <>

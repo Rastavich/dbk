@@ -19,7 +19,7 @@ module.exports = StyleSheet.create({
   defaultButtonText: {
     color: '#F3F4F6',
   },
-  backButton: {},
+  DefaultHeader: {},
 
   // Text
   textInput: {
@@ -40,6 +40,7 @@ module.exports = StyleSheet.create({
     fontSize: 18,
     alignContent: 'center',
     textAlign: 'center',
+    width: '100%',
   },
 
   // Containers
@@ -47,10 +48,19 @@ module.exports = StyleSheet.create({
     flex: 1,
     backgroundColor: '#111827',
   },
-  backButton: {
+  DefaultHeader: {
     left: 5,
     marginTop: 5,
     width: 24,
     height: 24,
+  },
+  header: {
+    flexDirection: 'row',
+    display: 'flex',
+    textAlign: 'center',
+  },
+  headText: {
+    textAlign: 'center',
+    alignItems: 'center',
   },
 });

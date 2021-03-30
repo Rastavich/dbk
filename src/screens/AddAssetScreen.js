@@ -1,5 +1,11 @@
 import React, {useContext, useEffect} from 'react';
-import {StyleSheet, Text, FlatList, TouchableOpacity, View} from 'react-native';
+import {
+  StyleSheet,
+  KeyboardAvoidingView,
+  View,
+  TextInput,
+  Button,
+} from 'react-native';
 
 import {UserContext, AuthContext} from '../components/context';
 import axios from 'axios';
@@ -9,8 +15,8 @@ import {GET_ASSET_BY_USER} from '../graphql/requests';
 import {GRAPHQL_URI} from '../config/index';
 import {
   DefaultView,
-  TextHeadingPurp,
-  BackButton,
+  DefaultHeader,
+  DefaultButton,
 } from '../components/generics/defaults';
 
 export function AddAssetScreen({navigation}) {
@@ -19,6 +25,7 @@ export function AddAssetScreen({navigation}) {
   const [asset, setAsset] = React.useState([]);
   const [selectedId, setSelectedId] = React.useState(null);
 
+  var theme = require('../styles/theme');
   let data = [];
 
   async function getAuth() {
@@ -62,19 +69,79 @@ export function AddAssetScreen({navigation}) {
       });
   }
 
+  const handleValidUser = (val) => {
+    if (val.trim().length >= 4) {
+      setData({
+        ...data,
+        isValidUser: true,
+      });
+    } else {
+      setData({
+        ...data,
+        isValidUser: false,
+      });
+    }
+  };
+
   useEffect(() => {
     getAuth();
   }, []);
 
   return (
     <DefaultView>
-      <BackButton onPress={() => navigation.goBack()} />
+      <DefaultHeader
+        onPress={() => navigation.goBack()}
+        text="Create an Asset"
+      />
       <>
-        <View style={styles.header}>
-          <View style={styles.headText}>
-            <TextHeadingPurp text="Create an Asset" />
+        <KeyboardAvoidingView
+          behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+          style={styles.container}>
+          <View style={styles.inputBackground}>
+            <View style={styles.fixToText}>
+              <Button
+                title="Left button"
+                onPress={() => Alert.alert('Left button pressed')}
+              />
+              <Button
+                title="Right button"
+                onPress={() => Alert.alert('Right button pressed')}
+              />
+            </View>
+            <TextInput
+              style={theme.textInput}
+              placeholder="Your Username"
+              placeholderTextColor="#666666"
+              autoCapitalize="none"
+              onChangeText={(val) => userInputChange(val)}
+              onEndEditing={(e) => handleValidUser(e.nativeEvent.text)}
+            />
+            <TextInput
+              style={theme.textInput}
+              placeholder="Your Email"
+              placeholderTextColor="#666666"
+              autoCapitalize="none"
+              onChangeText={(val) => userEmailInputChange(val)}
+              onEndEditing={(e) => handleValidUser(e.nativeEvent.text)}
+            />
+
+            <TextInput
+              style={theme.textInput}
+              placeholder="Your Password"
+              placeholderTextColor="#666666"
+              secureTextEntry={data.secureTextEntry ? true : false}
+              autoCapitalize="none"
+              onChangeText={(val) => handlePasswordChange(val)}
+            />
+
+            <DefaultButton
+              onPress={() => {
+                register();
+              }}
+              text="Sign Up!"
+            />
           </View>
-        </View>
+        </KeyboardAvoidingView>
       </>
     </DefaultView>
   );
@@ -95,17 +162,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     marginTop: 20,
   },
-  header: {
-    flexDirection: 'row',
-    display: 'flex',
-    padding: 10,
-  },
-  headText: {
-    marginLeft: 100,
-    marginTop: 4,
-    textAlign: 'center',
-    alignItems: 'center',
-  },
   pill: {
     backgroundColor: '#fff',
     borderRadius: 5,
@@ -119,5 +175,9 @@ const styles = StyleSheet.create({
     margin: 2,
     display: 'flex',
     flexDirection: 'row',
+  },
+  fixToText: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
   },
 });

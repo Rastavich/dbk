@@ -95,7 +95,8 @@ export function AssetListScreen({navigation}) {
       <Item
         item={item}
         onPress={() => openItem(item)}
-        style={{backgroundColor}}></Item>
+        style={{backgroundColor}}
+        key={(item) => item.id}></Item>
     );
   };
 
@@ -116,7 +117,7 @@ export function AssetListScreen({navigation}) {
         <>
           <View style={styles.header}>
             <View style={styles.headText}>
-              <TextHeadingPurp text="Your Digital Assets" />
+              <DefaultHeader text="Your Digital Assets" />
             </View>
           </View>
           <FlatList
