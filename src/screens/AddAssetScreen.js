@@ -5,14 +5,12 @@ import {
   View,
   TextInput,
   Button,
+  Alert,
 } from 'react-native';
 
 import {UserContext, AuthContext} from '../components/context';
-import axios from 'axios';
 import AsyncStorage from '@react-native-community/async-storage';
 
-import {GET_ASSET_BY_USER} from '../graphql/requests';
-import {GRAPHQL_URI} from '../config/index';
 import {
   DefaultView,
   DefaultHeader,
@@ -23,50 +21,14 @@ export function AddAssetScreen({navigation}) {
   const {signOut} = React.useContext(AuthContext);
   const {user, setUser} = useContext(UserContext);
   const [asset, setAsset] = React.useState([]);
-  const [selectedId, setSelectedId] = React.useState(null);
 
-  var theme = require('../styles/theme');
+  let theme = require('../styles/theme');
   let data = [];
 
   async function getAuth() {
-    const userToken = await AsyncStorage.getItem('userToken');
-
-    console.log(['USER TOKEN: ', userToken]);
-    console.log(['USER: ', user]);
-
     if (user == '') {
       signOut();
     }
-
-    var loginData = JSON.stringify({
-      query: GET_ASSET_BY_USER,
-      variables: {
-        id: user.userId,
-      },
-    });
-
-    var config = {
-      method: 'post',
-      url: GRAPHQL_URI,
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: 'Bearer ' + userToken,
-      },
-      data: loginData,
-    };
-    await axios(config)
-      .then(function (response) {
-        response.data.data.user.digital_assets.map(function (asset) {
-          asset.websites.map(function (site) {
-            data.push(site);
-          });
-        });
-
-        setAsset(data);
-      })
-      .catch(function (error) {
-        console.log(error);
-      });
   }
 
   const handleValidUser = (val) => {
@@ -100,11 +62,11 @@ export function AddAssetScreen({navigation}) {
           <View style={styles.inputBackground}>
             <View style={styles.fixToText}>
               <Button
-                title="Left button"
+                title="Website"
                 onPress={() => Alert.alert('Left button pressed')}
               />
               <Button
-                title="Right button"
+                title="Email Address"
                 onPress={() => Alert.alert('Right button pressed')}
               />
             </View>

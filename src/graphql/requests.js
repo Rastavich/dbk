@@ -42,5 +42,12 @@ export const REGISTER_USER = `
 `;
 
 export const CREATE_ASSET = `
-  
+  mutation createAsset($user: ID!) {
+    createDigitalAsset(input: {data: {user: $user}}) {
+      digitalAsset {
+        id
+        published_at
+      }
+    }
+  }
 `;

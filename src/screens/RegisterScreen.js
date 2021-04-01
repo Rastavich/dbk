@@ -14,10 +14,9 @@ import {
 } from '../components/generics/defaults';
 
 import {AuthContext} from '../components/context';
-import {REGISTER_USER} from '../graphql/requests';
-import {GRAPHQL_URI} from '../config/index';
+import {REGISTER_USER, CREATE_ASSET} from '../graphql/requests';
 import {Loader} from '../components/loader';
-import axios from 'axios';
+import * as api from '../services/api';
 
 const logo = '../assets/images/logo.png';
 var theme = require('../styles/theme');
@@ -35,59 +34,56 @@ export function RegisterScreen({navigation}) {
     isValidPassword: true,
   });
 
-  function register() {
+  async function register() {
     setIsLoading(true);
-    var loginData = JSON.stringify({
-      query: REGISTER_USER,
-      variables: {
-        username: data.username,
-        email: data.userEmail,
-        password: data.password,
-      },
-    });
-
-    var config = {
-      method: 'post',
-      url: GRAPHQL_URI,
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      data: loginData,
+    let _input = {
+      username: data.username,
+      email: data.userEmail,
+      password: data.password,
     };
 
-    axios(config)
-      .then(function (response) {
-        console.log(JSON.stringify(response.data));
+    const response = await api.post(_input, REGISTER_USER, '');
 
-        if (response.data.errors) {
-          response.data.errors.map(function (err) {
-            if (err.extensions.exception.code == 400) {
-              err.extensions.exception.data.message.map(function (errMsg) {
-                if (errMsg) {
-                  errMsg.messages.map(function (messages) {
-                    console.log(messages);
-                    Alert.alert('Error:', messages.message, [{text: 'Okay'}]);
-                    setIsLoading(false);
-                    return;
-                  });
-                }
+    if (!response) {
+      setIsLoading(false);
+      Alert.alert('Sorry!', 'There was an error processing your request.', [
+        {text: 'Okay'},
+      ]);
+      return;
+    }
+
+    if (response.data.errors) {
+      response.data.errors.map(function (err) {
+        if (err.extensions.exception.code == 400) {
+          err.extensions.exception.data.message.map(function (errMsg) {
+            if (errMsg) {
+              errMsg.messages.map(function (messages) {
+                console.log(messages);
+                Alert.alert('Error:', messages.message, [{text: 'Okay'}]);
+                setIsLoading(false);
+                return;
               });
             }
           });
         }
-
-        let foundUser = {
-          userToken: response.data.data.register.jwt,
-          userName: response.data.data.register.user.username,
-          userEmail: response.data.data.register.user.email,
-        };
-        setIsLoading(false);
-        signUp(foundUser);
-      })
-      .catch(function (error) {
-        console.log(error);
-        setIsLoading(false);
       });
+    }
+
+    let foundUser = {
+      userToken: response.data.data.register.jwt,
+      userName: response.data.data.register.user.username,
+      userEmail: response.data.data.register.user.email,
+    };
+
+    const setupDigitalAsset = await api.post(
+      asset,
+      CREATE_ASSET,
+      foundUser.userToken,
+    );
+    console.log('Created Asset', setupDigitalAsset);
+
+    setIsLoading(false);
+    signUp(foundUser);
   }
 
   const userInputChange = (val) => {

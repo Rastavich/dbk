@@ -12,7 +12,6 @@ import {ActivityIndicator, View} from 'react-native';
 import AsyncStorage from '@react-native-community/async-storage';
 
 import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
-import {link} from './graphql/link';
 import {AuthContext, UserContext} from './components/context';
 import {GRAPHQL_URI} from './config/index';
 
