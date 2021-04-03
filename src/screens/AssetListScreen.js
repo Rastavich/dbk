@@ -9,7 +9,6 @@ import {GET_ASSET_BY_USER} from '../graphql/requests';
 import {GRAPHQL_URI} from '../config/index';
 import {
   DefaultView,
-  TextHeadingPurp,
   TextWhite,
   DefaultButton,
 } from '../components/generics/defaults';

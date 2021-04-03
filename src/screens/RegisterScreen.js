@@ -69,21 +69,27 @@ export function RegisterScreen({navigation}) {
       });
     }
 
+    const id = {
+      data: {
+        user: response.data.data.register.user.id,
+      },
+    };
+
     let foundUser = {
       userToken: response.data.data.register.jwt,
       userName: response.data.data.register.user.username,
       userEmail: response.data.data.register.user.email,
     };
 
+    setIsLoading(false);
+    signUp(foundUser);
+
+    /* Create the digital asset when the user registers an account and we have the ID */
     const setupDigitalAsset = await api.post(
-      asset,
+      id.data,
       CREATE_ASSET,
       foundUser.userToken,
     );
-    console.log('Created Asset', setupDigitalAsset);
-
-    setIsLoading(false);
-    signUp(foundUser);
   }
 
   const userInputChange = (val) => {

@@ -2,28 +2,37 @@ import {GRAPHQL_URI} from '../config/index';
 import axios from 'axios';
 import {Alert} from 'react-native';
 
-async function send(_method, _input, _query, _header) {
+async function send(_method, _input, _query, _token) {
+  const opts = {
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  };
+
+  if (_token) {
+    opts.headers['Authorization'] = 'Bearer ' + _token;
+  }
+
   let _data = {
     query: _query,
     variables: {
       ..._input,
     },
   };
-  console.log('_DATA', _data);
 
   let config = {
     method: _method,
     url: GRAPHQL_URI,
-    headers: _header,
+    headers: opts.headers,
     data: _data,
   };
 
   console.log('config', config);
 
   // return;
-  await axios(config)
+  return await axios(config)
     .then((response) => {
-      console.log('response', response);
+      // console.log('response', response);
       return response;
     })
     .catch((err) => {
@@ -44,18 +53,7 @@ export function del(_input, _query, _token) {
 }
 
 export function post(_input, _query, _token) {
-  if (_token) {
-    let _header = {
-      'Content-Type': 'application/json',
-      Authorization: 'Bearer ' + _token,
-    };
-    return send('POST', _input, _query, _header);
-  } else {
-    let _header = {
-      'Content-Type': 'application/json',
-    };
-    return send('POST', _input, _query, _header);
-  }
+  return send('POST', _input, _query, _token);
 }
 
 export function put(_input, _query) {
