@@ -32,24 +32,6 @@ export function AddAssetScreen({navigation}) {
     }
   }
 
-  const handleValidUser = (val) => {
-    if (val.trim().length >= 4) {
-      setData({
-        ...data,
-        isValidUser: true,
-      });
-    } else {
-      setData({
-        ...data,
-        isValidUser: false,
-      });
-    }
-  };
-
-  useEffect(() => {
-    getAuth();
-  }, []);
-
   return (
     <DefaultView>
       <DefaultHeader

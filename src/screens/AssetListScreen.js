@@ -11,6 +11,7 @@ import {
   DefaultView,
   TextWhite,
   DefaultButton,
+  DefaultHeader,
 } from '../components/generics/defaults';
 
 const Item = ({item, onPress, style}) => (
@@ -40,7 +41,7 @@ export function AssetListScreen({navigation}) {
     console.log(['USER TOKEN: ', userToken]);
     console.log(['USER: ', user]);
 
-    if (user == '') {
+    if (user === '') {
       signOut();
     }
 
@@ -62,10 +63,7 @@ export function AssetListScreen({navigation}) {
     };
     await axios(config)
       .then(function (response) {
-        // console.log([
-        //   'Get Asset Response: ',
-        //   response.data.data.user.digital_asset.websites,
-        // ]);
+        console.log(['Get Asset Response: ', response.data.errors]);
         response.data.data.user.digital_asset.websites.map(function (asset) {
           data.push(asset);
           // console.log(['Get Nested Response: ', asset]);
@@ -95,7 +93,8 @@ export function AssetListScreen({navigation}) {
         item={item}
         onPress={() => openItem(item)}
         style={{backgroundColor}}
-        key={(item) => item.id}></Item>
+        key={item.id}
+      />
     );
   };
 
@@ -124,7 +123,16 @@ export function AssetListScreen({navigation}) {
             renderItem={renderItem}
             keyExtractor={(item) => item.id}
             key={(item) => item.id}
-            extraData={selectedId}></FlatList>
+            extraData={selectedId}
+          />
+          <View style={styles.add_button}>
+            <DefaultButton
+              text="Add New Asset"
+              onPress={() => {
+                navigation.navigate('AddAssetScreen');
+              }}
+            />
+          </View>
         </>
       ) : (
         <DefaultView>
@@ -182,5 +190,10 @@ const styles = StyleSheet.create({
     margin: 2,
     display: 'flex',
     flexDirection: 'row',
+  },
+  add_button: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: 1,
   },
 });
