@@ -9,25 +9,26 @@ import {
 } from 'react-native';
 
 import {UserContext, AuthContext} from '../components/context';
-import AsyncStorage from '@react-native-community/async-storage';
 
 import {
   DefaultView,
   DefaultHeader,
   DefaultButton,
+  TextWhite,
 } from '../components/generics/defaults';
 
 export function AddAssetScreen({navigation}) {
   const {signOut} = React.useContext(AuthContext);
   const {user, setUser} = useContext(UserContext);
   const [asset, setAsset] = React.useState([]);
+  const [type, setType] = React.useState('');
 
   let theme = require('../styles/theme');
   let data = [];
 
   async function getAuth() {
     if (user == '') {
-      signOut();
+      await signOut();
     }
   }
 
@@ -61,47 +62,48 @@ export function AddAssetScreen({navigation}) {
           style={styles.container}>
           <View style={styles.inputBackground}>
             <View style={styles.fixToText}>
-              <Button
-                title="Website"
-                onPress={() => Alert.alert('Left button pressed')}
-              />
-              <Button
-                title="Email Address"
-                onPress={() => Alert.alert('Right button pressed')}
-              />
+              <Button title="Website" onPress={() => setType('website')} />
+              <Button title="Email" onPress={() => setType('email')} />
             </View>
-            <TextInput
-              style={theme.textInput}
-              placeholder="Your Username"
-              placeholderTextColor="#666666"
-              autoCapitalize="none"
-              onChangeText={(val) => userInputChange(val)}
-              onEndEditing={(e) => handleValidUser(e.nativeEvent.text)}
-            />
-            <TextInput
-              style={theme.textInput}
-              placeholder="Your Email"
-              placeholderTextColor="#666666"
-              autoCapitalize="none"
-              onChangeText={(val) => userEmailInputChange(val)}
-              onEndEditing={(e) => handleValidUser(e.nativeEvent.text)}
-            />
+            {type == 'website' ? (
+              <View>
+                <TextInput
+                  style={theme.textInput}
+                  placeholder="www.mywebsite.com.au"
+                  placeholderTextColor="#666666"
+                  autoCapitalize="none"
+                  onChangeText={(val) => userInputChange(val)}
+                  onEndEditing={(e) => handleValidUser(e.nativeEvent.text)}
+                />
+                <TextInput
+                  style={theme.textInput}
+                  placeholder=""
+                  placeholderTextColor="#666666"
+                  autoCapitalize="none"
+                  onChangeText={(val) => userEmailInputChange(val)}
+                  onEndEditing={(e) => handleValidUser(e.nativeEvent.text)}
+                />
 
-            <TextInput
-              style={theme.textInput}
-              placeholder="Your Password"
-              placeholderTextColor="#666666"
-              secureTextEntry={data.secureTextEntry ? true : false}
-              autoCapitalize="none"
-              onChangeText={(val) => handlePasswordChange(val)}
-            />
-
-            <DefaultButton
-              onPress={() => {
-                register();
-              }}
-              text="Sign Up!"
-            />
+                <TextInput
+                  style={theme.textInput}
+                  placeholder="Your Password"
+                  placeholderTextColor="#666666"
+                  secureTextEntry={data.secureTextEntry ? true : false}
+                  autoCapitalize="none"
+                  onChangeText={(val) => handlePasswordChange(val)}
+                />
+                <DefaultButton
+                  onPress={() => {
+                    register();
+                  }}
+                  text="Sign Up!"
+                />
+              </View>
+            ) : (
+              <View>
+                <TextWhite>Please choose an asset type</TextWhite>
+              </View>
+            )}
           </View>
         </KeyboardAvoidingView>
       </>
