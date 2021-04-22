@@ -9,7 +9,6 @@ import {
 } from 'react-native';
 
 import {UserContext, AuthContext} from '../components/context';
-import AsyncStorage from '@react-native-community/async-storage';
 
 import {
   DefaultView,
@@ -30,24 +29,6 @@ export function AddAssetScreen({navigation}) {
       signOut();
     }
   }
-
-  const handleValidUser = (val) => {
-    if (val.trim().length >= 4) {
-      setData({
-        ...data,
-        isValidUser: true,
-      });
-    } else {
-      setData({
-        ...data,
-        isValidUser: false,
-      });
-    }
-  };
-
-  useEffect(() => {
-    getAuth();
-  }, []);
 
   return (
     <DefaultView>
