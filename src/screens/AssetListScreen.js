@@ -13,7 +13,7 @@ import axios from 'axios';
 import AsyncStorage from '@react-native-community/async-storage';
 
 import {GET_ASSET_BY_USER} from '../graphql/requests';
-import {GRAPHQL_URI} from '../config/index';
+import {GRAPHQL_URI} from '@env';
 import {
   DefaultView,
   TextWhite,
