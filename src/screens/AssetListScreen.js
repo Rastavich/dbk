@@ -1,5 +1,12 @@
 import React, {useContext, useEffect} from 'react';
-import {StyleSheet, Text, FlatList, TouchableOpacity, View} from 'react-native';
+import {
+  StyleSheet,
+  Text,
+  FlatList,
+  TouchableOpacity,
+  View,
+  Touchable,
+} from 'react-native';
 
 import {UserContext, AuthContext} from '../components/context';
 import axios from 'axios';
@@ -61,6 +68,7 @@ export function AssetListScreen({navigation}) {
       },
       data: loginData,
     };
+
     await axios(config)
       .then(function (response) {
         console.log(['Get Asset Response: ', response.data.errors]);
@@ -138,15 +146,19 @@ export function AssetListScreen({navigation}) {
         <DefaultView>
           <View style={styles.container}>
             <TextWhite text="You do not have any digital assets, go ahead and add some!" />
-            <DefaultButton
-              text="Add"
-              onPress={() => {
-                navigation.navigate('AddAssetScreen');
-              }}
-            />
           </View>
         </DefaultView>
       )}
+
+      <View>
+        <TouchableOpacity
+          style={styles.add_button}
+          onPress={() => {
+            navigation.navigate('AddAssetScreen');
+          }}>
+          <Text>+</Text>
+        </TouchableOpacity>
+      </View>
     </DefaultView>
   );
 }
@@ -192,8 +204,15 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
   },
   add_button: {
-    alignItems: 'center',
+    position: 'absolute',
+    bottom: 1,
+    right: 1,
+    backgroundColor: '#6366F1',
+    margin: 5,
+    width: 50,
+    height: 50,
     justifyContent: 'center',
-    marginBottom: 1,
+    alignItems: 'center',
+    borderRadius: 40,
   },
 });
