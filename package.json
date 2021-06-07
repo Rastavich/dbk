@@ -10,7 +10,7 @@
     "lint": "eslint ."
   },
   "dependencies": {
-    "@apollo/client": "^3.0.0-beta.41",
+    "@apollo/client": "^3.3.19",
     "@react-native-community/async-storage": "^1.8.1",
     "@react-native-community/masked-view": "^0.1.7",
     "@react-navigation/bottom-tabs": "^5.11.2",
@@ -30,8 +30,8 @@
     "react-native-reanimated": "^1.7.1",
     "react-native-safe-area-context": "^3.2.0",
     "react-native-screens": "^3.3.0",
-    "react-native-svg": "^12.1.0",
-    "react-native-tab-view": "^2.15.2"
+    "react-native-svg": "^12.1.1",
+    "react-native-tab-view": "^2.16.0"
   },
   "devDependencies": {
     "@babel/core": "^7.8.4",
