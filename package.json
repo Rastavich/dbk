@@ -10,7 +10,7 @@
     "lint": "eslint ."
   },
   "dependencies": {
-    "@apollo/client": "^3.3.19",
+    "@apollo/client": "^3.3.21",
     "@react-native-community/async-storage": "^1.8.1",
     "@react-navigation/bottom-tabs": "^5.11.11",
     "@react-native-community/masked-view": "^0.1.11",
