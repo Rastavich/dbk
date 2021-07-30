@@ -16,7 +16,7 @@ import {
   DefaultHeader,
 } from '../components/generics/defaults';
 
-import {BASE_LOGIN_URI} from '@env';
+import {BASE_LOGIN_URI} from '../config/index';
 import {AuthContext, UserContext} from '../components/context';
 import {Loader} from '../components/loader';
 

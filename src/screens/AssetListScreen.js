@@ -13,7 +13,7 @@ import axios from 'axios';
 import AsyncStorage from '@react-native-community/async-storage';
 
 import {GET_ASSET_BY_USER} from '../graphql/requests';
-import {GRAPHQL_URI} from '@env';
+import {GRAPHQL_URI} from '../config/index';
 import {
   DefaultView,
   TextWhite,
@@ -72,7 +72,8 @@ export function AssetListScreen({navigation}) {
     await axios(config)
       .then(function (response) {
         console.log(['Get Asset Response: ', response.data.errors]);
-        response.data.data.user.digital_asset.websites.map(function (asset) {
+        console.log(response.data);
+        response.data.user.digital_asset.websites.map(function (asset) {
           data.push(asset);
           // console.log(['Get Nested Response: ', asset]);
           // asset.websites.map(function (site) {
