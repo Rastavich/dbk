@@ -16,18 +16,18 @@ import {
   DefaultHeader,
 } from '../components/generics/defaults';
 
-import {BASE_LOGIN_URI} from '../config/index';
-import {AuthContext, UserContext} from '../components/context';
-import {Loader} from '../components/loader';
+import { BASE_LOGIN_URI } from '../config/index';
+import { AuthContext, UserContext } from '../components/context';
+import { Loader } from '../components/loader';
 
-const {width, height} = Dimensions.get('window');
+const { width, height } = Dimensions.get('window');
 var theme = require('../styles/theme');
 const logo = '../assets/images/logo.png';
 let devMode = true;
 
-export function LoginScreen({navigation}) {
-  const {user, setUser} = React.useContext(UserContext);
-  const {signIn, signOut} = React.useContext(AuthContext);
+export function LoginScreen({ navigation }) {
+  const { user, setUser } = React.useContext(UserContext);
+  const { signIn, signOut } = React.useContext(AuthContext);
   const [isLoading, setIsLoading] = React.useState(false);
   const [data, setData] = React.useState({
     username: '',
@@ -39,12 +39,12 @@ export function LoginScreen({navigation}) {
   });
 
   const textInputChange = (val) => {
-      setData({
-        ...data,
-        username: val,
-        check_textInputChange: true,
-        isValidUser: true,
-      });
+    setData({
+      ...data,
+      username: val,
+      check_textInputChange: true,
+      isValidUser: true,
+    });
   };
 
   const handlePasswordChange = (val) => {
@@ -91,21 +91,13 @@ export function LoginScreen({navigation}) {
     if (!devMode) {
       if (data.username.length === 0 || data.password.length === 0) {
         Alert.alert(
-            'Wrong Input!',
-            'Username or password field cannot be empty.',
-            [{text: 'Okay'}],
+          'Wrong Input!',
+          'Username or password field cannot be empty.',
+          [{ text: 'Okay' }],
         );
         setIsLoading(false);
         return;
       }
-    }
-
-    if (foundUser.length === 0) {
-      Alert.alert('Invalid User!', 'Username or password is incorrect.', [
-        {text: 'Okay'},
-      ]);
-      setIsLoading(false);
-      return;
     }
 
     await axios
@@ -128,7 +120,7 @@ export function LoginScreen({navigation}) {
       .catch((err) => {
         console.log(err);
         Alert.alert('Invalid User!', 'Username or password is incorrect.', [
-          {text: 'Okay'},
+          { text: 'Okay' },
         ]);
         setIsLoading(false);
 
@@ -166,42 +158,42 @@ export function LoginScreen({navigation}) {
 
               <View style={styles.inputBackground}>
                 {devMode ? (
-                    <>
+                  <>
                     <DefaultButton text="Dev Login"
 
-                                   onPress={() => {
-                                     loginHandle('test@test.com', 'test123');
-                                   }}
+                      onPress={() => {
+                        loginHandle('test@test.com', 'test123');
+                      }}
                     />
 
-                    </>
+                  </>
                 ) : (
-                    <>
-                <TextInput
-                  style={theme.textInput}
-                  placeholder="Your Username"
-                  placeholderTextColor="#666666"
-                  autoCapitalize="none"
-                  onChangeText={(val) => textInputChange(val)}
-                  onEndEditing={(e) => handleValidUser(e.nativeEvent.text)}
-                />
+                  <>
+                    <TextInput
+                      style={theme.textInput}
+                      placeholder="Your Username"
+                      placeholderTextColor="#666666"
+                      autoCapitalize="none"
+                      onChangeText={(val) => textInputChange(val)}
+                      onEndEditing={(e) => handleValidUser(e.nativeEvent.text)}
+                    />
 
-                <TextInput
-                  style={theme.textInput}
-                  placeholder="Your Password"
-                  placeholderTextColor="#666666"
-                  secureTextEntry={data.secureTextEntry}
-                  autoCapitalize="none"
-                  onChangeText={(val) => handlePasswordChange(val)}
-                />
-                <DefaultButton
-                  text="Sign In"
-                  onPress={() => {
-                    loginHandle(data.username, data.password).then(r => console.log("Sign In pressed", r));
-                  }}
-                />
-                </>
-                  )}
+                    <TextInput
+                      style={theme.textInput}
+                      placeholder="Your Password"
+                      placeholderTextColor="#666666"
+                      secureTextEntry={data.secureTextEntry}
+                      autoCapitalize="none"
+                      onChangeText={(val) => handlePasswordChange(val)}
+                    />
+                    <DefaultButton
+                      text="Sign In"
+                      onPress={() => {
+                        loginHandle(data.username, data.password).then(r => console.log("Sign In pressed", r));
+                      }}
+                    />
+                  </>
+                )}
               </View>
             </KeyboardAvoidingView>
           )}
