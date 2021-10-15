@@ -14,6 +14,7 @@ export function InitialScreen({navigation}) {
       <View style={styles.container}>
         <Image source={require(logo)} alt="Logo Image" style={styles.logo} />
 
+
         <DefaultButton
           text="Login"
           onPress={() => {

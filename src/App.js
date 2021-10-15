@@ -179,15 +179,15 @@ export default function () {
             {loginState.userToken !== null ? (
               <>
                 <Tab.Navigator
-                  tabBarOptions={{
-                    activeTintColor: '#FFFFFF',
-                    inactiveTintColor: '#000',
-                    style: {backgroundColor: '#111827'},
-                    labelStyle: {
+                  screenOptions={{
+                    tabBarActiveTintColor: '#FFFFFF',
+                    tabBarInactiveTintColor: '#000',
+                    tabBarStyle: {backgroundColor: '#111827'},
+                    tabBarLabelStyle: {
                       textAlign: 'center',
                       color: '#fff',
                     },
-                    indicatorStyle: {
+                    tabBarIndicatorStyle: {
                       borderBottomColor: '#111827',
                     },
                   }}>

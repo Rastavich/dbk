@@ -23,6 +23,7 @@ import {Loader} from '../components/loader';
 const {width, height} = Dimensions.get('window');
 var theme = require('../styles/theme');
 const logo = '../assets/images/logo.png';
+let devMode = true;
 
 export function LoginScreen({navigation}) {
   const {user, setUser} = React.useContext(UserContext);
@@ -38,21 +39,12 @@ export function LoginScreen({navigation}) {
   });
 
   const textInputChange = (val) => {
-    if (val.trim().length >= 4) {
       setData({
         ...data,
         username: val,
         check_textInputChange: true,
         isValidUser: true,
       });
-    } else {
-      setData({
-        ...data,
-        username: val,
-        check_textInputChange: false,
-        isValidUser: false,
-      });
-    }
   };
 
   const handlePasswordChange = (val) => {
@@ -96,17 +88,19 @@ export function LoginScreen({navigation}) {
       userEmail: '',
     };
 
-    if (data.username.length == 0 || data.password.length == 0) {
-      Alert.alert(
-        'Wrong Input!',
-        'Username or password field cannot be empty.',
-        [{text: 'Okay'}],
-      );
-      setIsLoading(false);
-      return;
+    if (!devMode) {
+      if (data.username.length === 0 || data.password.length === 0) {
+        Alert.alert(
+            'Wrong Input!',
+            'Username or password field cannot be empty.',
+            [{text: 'Okay'}],
+        );
+        setIsLoading(false);
+        return;
+      }
     }
 
-    if (foundUser.length == 0) {
+    if (foundUser.length === 0) {
       Alert.alert('Invalid User!', 'Username or password is incorrect.', [
         {text: 'Okay'},
       ]);
@@ -137,7 +131,8 @@ export function LoginScreen({navigation}) {
           {text: 'Okay'},
         ]);
         setIsLoading(false);
-        return;
+
+
       });
   }
 
@@ -167,7 +162,21 @@ export function LoginScreen({navigation}) {
                 alt="Logo Image"
                 style={styles.logo}
               />
+
+
               <View style={styles.inputBackground}>
+                {devMode ? (
+                    <>
+                    <DefaultButton text="Dev Login"
+
+                                   onPress={() => {
+                                     loginHandle('test@test.com', 'test123');
+                                   }}
+                    />
+
+                    </>
+                ) : (
+                    <>
                 <TextInput
                   style={theme.textInput}
                   placeholder="Your Username"
@@ -181,16 +190,18 @@ export function LoginScreen({navigation}) {
                   style={theme.textInput}
                   placeholder="Your Password"
                   placeholderTextColor="#666666"
-                  secureTextEntry={data.secureTextEntry ? true : false}
+                  secureTextEntry={data.secureTextEntry}
                   autoCapitalize="none"
                   onChangeText={(val) => handlePasswordChange(val)}
                 />
                 <DefaultButton
                   text="Sign In"
                   onPress={() => {
-                    loginHandle(data.username, data.password);
+                    loginHandle(data.username, data.password).then(r => console.log("Sign In pressed", r));
                   }}
                 />
+                </>
+                  )}
               </View>
             </KeyboardAvoidingView>
           )}
