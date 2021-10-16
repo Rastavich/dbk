@@ -1,4 +1,4 @@
-import React, {useContext, useEffect} from 'react';
+import React, { useContext, useEffect } from 'react';
 import {
   StyleSheet,
   KeyboardAvoidingView,
@@ -8,7 +8,7 @@ import {
   Alert,
 } from 'react-native';
 
-import {UserContext, AuthContext} from '../components/context';
+import { UserContext, AuthContext } from '../components/context';
 
 import {
   DefaultView,
@@ -17,9 +17,9 @@ import {
   TextWhite,
 } from '../components/generics/defaults';
 
-export function AddAssetScreen({navigation}) {
-  const {signOut} = React.useContext(AuthContext);
-  const {user, setUser} = useContext(UserContext);
+export function AddAssetScreen({ navigation }) {
+  const { signOut } = React.useContext(AuthContext);
+  const { user, setUser } = useContext(UserContext);
   const [asset, setAsset] = React.useState([]);
   const [type, setType] = React.useState('');
 
@@ -54,26 +54,18 @@ export function AddAssetScreen({navigation}) {
                   placeholder="www.mywebsite.com.au"
                   placeholderTextColor="#666666"
                   autoCapitalize="none"
-                  onChangeText={(val) => userInputChange(val)}
-                  onEndEditing={(e) => handleValidUser(e.nativeEvent.text)}
+                  onChangeText={(val) => websiteValueChanged(val)}
+                  onEndEditing={(e) => handleValidWebsite(e.nativeEvent.text)}
                 />
                 <TextInput
                   style={theme.textInput}
-                  placeholder=""
+                  placeholder="email@gmail.com"
                   placeholderTextColor="#666666"
                   autoCapitalize="none"
-                  onChangeText={(val) => userEmailInputChange(val)}
-                  onEndEditing={(e) => handleValidUser(e.nativeEvent.text)}
+                  onChangeText={(val) => emailValueChanged(val)}
+                  onEndEditing={(e) => handleValidEmail(e.nativeEvent.text)}
                 />
 
-                <TextInput
-                  style={theme.textInput}
-                  placeholder="Your Password"
-                  placeholderTextColor="#666666"
-                  secureTextEntry={data.secureTextEntry ? true : false}
-                  autoCapitalize="none"
-                  onChangeText={(val) => handlePasswordChange(val)}
-                />
                 <DefaultButton
                   onPress={() => {
                     register();
