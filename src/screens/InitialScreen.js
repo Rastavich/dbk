@@ -34,9 +34,7 @@ export function InitialScreen({navigation}) {
           <TextWhite
             text="I don't know man, Italy, Greece, Argentina... It's fine, everythings is
         fine. theres an infinite number of realities Morty, and in a few dozens
-        of those i got lucky and turned everything back to normal. Shadow
-        Jacker, you haven't come out of your masturbation cave in eons! Allahu
-        blehhhh Akbar!"
+        of those i got lucky and turned everything back to normal."
           />
         </View>
       </View>
